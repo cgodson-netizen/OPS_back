@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>{{ action }} Product</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
+        <a href="{% url 'products:product_create' %}">Add Product</a> |
+        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>{{ action }} Product</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">{{ action }}</button>
+    </form>
+    <br>
+    <a href="{% url 'products:seller_product_list' %}">← Cancel</a>
+</body>
+</html>

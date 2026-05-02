@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head><title>Order #{{ order.id }}</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:product_list' %}">Browse Products</a> |
+        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
+        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>Order #{{ order.id }}</h2>
+    <p>Status: <strong>{{ order.get_status_display }}</strong></p>
+    <p>Delivery Address: {{ order.delivery_address }}</p>
+    <p>Total: GHS {{ order.total_amount }}</p>
+    <p>Placed: {{ order.created_at|date:"d M Y, h:i A" }}</p>
+    <hr>
+    <h3>Items</h3>
+    {% for item in order.items.all %}
+    <p>{{ item.product.name }} x {{ item.quantity }} = GHS {{ item.get_subtotal }}</p>
+    {% endfor %}
+    <hr>
+    {% if order.status == 'pending' %}
+    {% if not order.transaction or order.transaction.status != 'success' %}
+    <a href="{% url 'payments:initiate_payment' order.id %}">
+        <button>Pay Now — GHS {{ order.total_amount }}</button>
+    </a>
+    {% endif %}
+    <a href="{% url 'orders:order_cancel' order.pk %}">Cancel Order</a>
+    {% endif %}
+    <br><br>
+    <a href="{% url 'orders:buyer_order_list' %}">← Back to My Orders</a>
+</body>
+</html>

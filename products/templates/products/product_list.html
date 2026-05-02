@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>Products</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:product_list' %}">Browse Products</a> |
+        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
+        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+    <h2>Products</h2>
+
+    <!-- Category filter -->
+    <div>
+        <a href="{% url 'products:product_list' %}">All</a>
+        {% for category in categories %}
+        | <a href="?category={{ category.slug }}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+    <hr>
+
+    {% for product in products %}
+    <div>
+        <h3><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h3>
+        <p>GHS {{ product.price }} | Stock: {{ product.stock }}</p>
+        <a href="{% url 'orders:cart_add' product.id %}">+ Add to Cart</a>
+    </div>
+    <hr>
+    {% empty %}
+    <p>No products available.</p>
+    {% endfor %}
+</body>
+</html>

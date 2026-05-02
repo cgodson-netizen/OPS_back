@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head><title>Checkout</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:product_list' %}">Browse Products</a> |
+        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
+        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>Checkout</h2>
+    <h3>Order Summary</h3>
+    {% for item in cart.items.all %}
+    <p>{{ item.product.name }} x {{ item.quantity }} = GHS {{ item.get_subtotal }}</p>
+    {% endfor %}
+    <h3>Total: GHS {{ cart.get_total }}</h3>
+    <hr>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Place Order</button>
+    </form>
+    <br>
+    <a href="{% url 'orders:cart_detail' %}">← Back to Cart</a>
+</body>
+</html>

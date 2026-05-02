@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>Incoming Orders</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
+        <a href="{% url 'products:product_create' %}">Add Product</a> |
+        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>Incoming Orders</h2>
+    {% for order in orders %}
+    <div>
+        <p>
+            Order #{{ order.id }} |
+            <strong>{{ order.get_status_display }}</strong> |
+            GHS {{ order.total_amount }} |
+            {{ order.created_at|date:"d M Y" }}
+        </p>
+        <a href="{% url 'orders:seller_order_detail' order.pk %}">View & Update</a>
+    </div>
+    <hr>
+    {% empty %}
+    <p>No orders yet.</p>
+    {% endfor %}
+</body>
+</html>

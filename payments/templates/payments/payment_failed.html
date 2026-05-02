@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head><title>Payment Failed</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:product_list' %}">Browse Products</a> |
+        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+    <h2>❌ Payment Failed</h2>
+    <p>Something went wrong with your payment for Order #{{ order.id }}.</p>
+    <p>Don't worry — your order is still saved. You can try paying again.</p>
+    <br>
+    <a href="{% url 'payments:initiate_payment' order.id %}">Try Again</a> |
+    <a href="{% url 'orders:order_detail' order.pk %}">Back to Order</a>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+<head><title>Login</title></head>
+<body>
+    <h2>Login</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Login</button>
+    </form>
+    <p>Register as <a href="{% url 'accounts:register_buyer' %}">Buyer</a> or <a href="{% url 'accounts:register_seller' %}">Seller</a></p>
+</body>
+</html>

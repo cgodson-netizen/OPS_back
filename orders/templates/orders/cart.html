@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head><title>My Cart</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:product_list' %}">Browse Products</a> |
+        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
+        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>My Cart</h2>
+    {% if cart.items.all %}
+        {% for item in cart.items.all %}
+        <div>
+            <p>
+                <a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a>
+                — GHS {{ item.product.price }} x {{ item.quantity }}
+                = GHS {{ item.get_subtotal }}
+            </p>
+            <form method="post" action="{% url 'orders:cart_update' item.id %}">
+                {% csrf_token %}
+                <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
+                <button type="submit">Update</button>
+            </form>
+            <a href="{% url 'orders:cart_remove' item.id %}">Remove</a>
+        </div>
+        <hr>
+        {% endfor %}
+        <h3>Total: GHS {{ cart.get_total }}</h3>
+        <a href="{% url 'orders:checkout' %}">Proceed to Checkout →</a>
+    {% else %}
+        <p>Your cart is empty.</p>
+        <a href="{% url 'products:product_list' %}">Start Shopping</a>
+    {% endif %}
+</body>
+</html>

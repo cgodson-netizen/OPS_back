@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head><title>Buyer Dashboard</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:product_list' %}">Browse Products</a> |
+        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
+        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+    <h2>Welcome, {{ request.user.get_full_name }}</h2>
+    <p>What would you like to do today?</p>
+    <ul>
+        <li><a href="{% url 'products:product_list' %}">Browse Products</a></li>
+        <li><a href="{% url 'orders:cart_detail' %}">View My Cart</a></li>
+        <li><a href="{% url 'orders:buyer_order_list' %}">View My Orders</a></li>
+    </ul>
+</body>
+</html>

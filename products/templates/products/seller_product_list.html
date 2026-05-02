@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head><title>My Products</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
+        <a href="{% url 'products:product_create' %}">Add Product</a> |
+        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>My Products</h2>
+    <a href="{% url 'products:product_create' %}">+ Add New Product</a>
+    <hr>
+
+    {% for product in products %}
+    <div>
+        <h3>{{ product.name }}</h3>
+        <p>
+            Price: GHS {{ product.price }} |
+            Stock: {{ product.stock }} |
+            Active: {{ product.is_active }}
+        </p>
+        <a href="{% url 'products:product_edit' product.pk %}">Edit</a> |
+        <a href="{% url 'products:product_toggle_active' product.pk %}">Toggle Active</a> |
+        <a href="{% url 'products:product_delete' product.pk %}">Delete</a>
+    </div>
+    <hr>
+    {% empty %}
+    <p>You have no products yet. <a href="{% url 'products:product_create' %}">Add one now</a></p>
+    {% endfor %}
+</body>
+</html>

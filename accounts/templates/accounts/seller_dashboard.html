@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head><title>Seller Dashboard</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
+        <a href="{% url 'products:product_create' %}">Add Product</a> |
+        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
+        <a href="{% url 'analytics:seller_analytics' %}">Analytics</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+    <h2>Welcome, {{ request.user.get_full_name }}</h2>
+    <p>What would you like to do today?</p>
+    <ul>
+        <li><a href="{% url 'products:seller_product_list' %}">Manage My Products</a></li>
+        <li><a href="{% url 'products:product_create' %}">Add New Product</a></li>
+        <li><a href="{% url 'orders:seller_order_list' %}">View Incoming Orders</a></li>
+        <li><a href="{% url 'analytics:seller_analytics' %}">View My Analytics</a></li>
+    </ul>
+</body>
+</html>

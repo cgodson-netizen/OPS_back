@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head><title>Order #{{ order.id }}</title></head>
+<body>
+    <nav>
+        <strong>OPS</strong> |
+        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
+        <a href="{% url 'products:product_create' %}">Add Product</a> |
+        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
+        <a href="{% url 'accounts:logout' %}">Logout</a>
+    </nav>
+    <hr>
+
+    <h2>Order #{{ order.id }}</h2>
+    <p>Buyer: {{ order.buyer.get_full_name }}</p>
+    <p>Delivery Address: {{ order.delivery_address }}</p>
+    <p>Status: <strong>{{ order.get_status_display }}</strong></p>
+    <p>Placed: {{ order.created_at|date:"d M Y, h:i A" }}</p>
+    <hr>
+    <h3>Your Items in this Order</h3>
+    {% for item in seller_items %}
+    <p>{{ item.product.name }} x {{ item.quantity }} = GHS {{ item.get_subtotal }}</p>
+    {% endfor %}
+    <hr>
+    <h3>Update Order Status</h3>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Update Status</button>
+    </form>
+    <br>
+    <a href="{% url 'orders:seller_order_list' %}">← Back to Orders</a>
+</body>
+</html>
