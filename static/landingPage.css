@@ -1,0 +1,315 @@
+@import url('https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap');
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:"Sora", sans-serif;
+font-optical-sizing:auto;
+}
+
+body{
+color:white;
+overflow-x:hidden;
+}
+
+/* BACKGROUND IMAGE */
+
+.background{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-2;
+overflow:hidden;
+}
+
+.background .bg-slide{
+position:absolute;
+top:0;
+left:0;
+width:100%;
+height:100%;
+object-fit:cover;
+display:block;
+opacity:0;
+transition:opacity 2s ease;
+}
+
+.background .bg-slide.active{
+opacity:1;
+}
+
+/* DARK OVERLAY */
+
+.overlay{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:rgba(0,0,0,0.55);
+z-index:-1;
+}
+
+/* NAVBAR */
+
+.navbar{
+display:flex;
+justify-content:space-between;
+padding:20px 60px;
+position:fixed;
+width:100%;
+z-index:10;
+}
+
+.logo{
+font-weight:800;
+letter-spacing:0.08em;
+}
+
+.navbar nav{
+display:flex;
+align-items:center;
+gap:14px;
+flex-wrap:nowrap;
+white-space:nowrap;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+animation:heroSlideIn 800ms ease-out both;
+}
+
+.hero h1{
+font-size:90px;
+margin-bottom:20px;
+font-weight:800;
+letter-spacing:-0.04em;
+line-height:0.94;
+}
+
+.hero p{
+font-size:18px;
+margin-bottom:30px;
+font-weight:400;
+max-width:36rem;
+}
+
+@keyframes heroSlideIn{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+@media (prefers-reduced-motion: reduce){
+.hero{
+animation:none;
+}
+}
+
+/* BUTTONS */
+
+.primary{
+background:#1e7f4f;
+border:none;
+padding:14px 28px;
+color:white;
+border-radius:50px;
+margin-right:10px;
+text-decoration:none;
+display:inline-block;
+font-weight:600;
+}
+
+.secondary{
+background:#ffffff33;
+border:none;
+padding:14px 28px;
+color:white;
+border-radius:50px;
+text-decoration:none;
+display:inline-block;
+font-weight:500;
+}
+
+/* OTHER SECTIONS */
+
+.content{
+min-height:100vh;
+background:rgba(0,0,0,0.7);
+padding:120px 60px;
+text-align:center;
+}
+
+.btn-primary{
+    background:#1e7f4f;
+border:none;
+padding:14px 28px;
+color:white;
+border-radius:50px;
+margin-right:10px;
+font-weight:700;
+}
+
+.btn-login{
+background:transparent;
+border:1px solid rgba(255,255,255,0.75);
+padding:12px 26px;
+color:white;
+border-radius:50px;
+cursor:pointer;
+font-weight:500;
+}
+
+.btn-login:hover{
+background:rgba(255,255,255,0.12);
+}
+
+.dropdown {
+    position: relative;
+    margin-right: 110px;
+    margin-top: 20px;
+}
+
+/* MENU */
+
+.dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    width: 220px;
+    background: white;
+    border-radius: 14px;
+    padding: 8px 0;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.12);
+
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+
+    transition: all 0.25s ease;
+}
+
+/* ACTIVE STATE */
+
+.dropdown.active .dropdown-menu {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* LINKS */
+
+.dropdown-menu a {
+    display: block;
+    padding: 14px 18px;
+    text-decoration: none;
+    color: #111;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.dropdown-menu a:hover {
+    background: #f5f5f5;
+    padding-left: 22px;
+}
+
+#login-btn {
+    background: #1e7f4f;
+    border: none;
+    padding: 14px 28px;
+    color: white;
+    border-radius: 50px;
+    margin-right: 10px;
+    margin-top: 20px;
+    font-weight: 600;
+}
+
+:root[data-screen="tablet"] .navbar {
+    padding: 20px 32px;
+}
+
+:root[data-screen="tablet"] .hero h1 {
+    font-size: 64px;
+}
+
+:root[data-screen="tablet"] .hero p {
+    font-size: 17px;
+}
+
+:root[data-screen="tablet"] .cta {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+}
+
+:root[data-screen="tablet"] .primary,
+:root[data-screen="tablet"] .secondary,
+:root[data-screen="tablet"] .btn-primary,
+:root[data-screen="tablet"] .btn-login {
+    padding: 12px 24px;
+}
+
+:root[data-screen="phone"] .navbar {
+    padding: 16px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+:root[data-screen="phone"] .navbar nav {
+    width: 100%;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+:root[data-screen="phone"] .dropdown {
+    margin-right: 0;
+    margin-top: 0;
+}
+
+:root[data-screen="phone"] .hero {
+    padding: 40px 20px;
+}
+
+:root[data-screen="phone"] .hero h1 {
+    font-size: 40px;
+    line-height: 1.1;
+}
+
+:root[data-screen="phone"] .hero p {
+    font-size: 16px;
+}
+
+:root[data-screen="phone"] .cta {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+    align-items: center;
+}
+
+:root[data-screen="phone"] .primary,
+:root[data-screen="phone"] .secondary,
+:root[data-screen="phone"] .btn-primary,
+:root[data-screen="phone"] .btn-login {
+    padding: 12px 22px;
+}

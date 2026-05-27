@@ -83,7 +83,8 @@ def buyer_dashboard(request):
         return redirect('accounts:role_redirect')
     return render(request, 'accounts/buyer_dashboard.html')
 
+
 def homepage(request):
     if request.user.is_authenticated:
         return redirect('accounts:role_redirect')
-    return render(request, 'accounts/homepage.html')
+    return render(request, 'homepage.html')

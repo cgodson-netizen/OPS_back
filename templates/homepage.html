@@ -1,0 +1,49 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OPS - Online Marketplace</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'landingPage.css' %}">
+</head>
+<body>
+    <div class="background">
+        <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
+        <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
+        <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
+    </div>
+    <div class="overlay"></div>
+
+    <header class="navbar">
+        <div class="logo">OPS</div>
+        <nav>
+            <button type="button" id="login-btn" class="btn-login"
+                onclick="window.location.href='{% url 'accounts:login' %}'">
+                Login
+            </button>
+            <div class="dropdown">
+                <button class="btn-primary" id="registerBtn">
+                    Register
+                </button>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{% url 'accounts:register_buyer' %}">Become a Buyer</a>
+                    <a href="{% url 'accounts:register_seller' %}">Become a Seller</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <h1>Buy and Sell with Confidence</h1>
+        <p>Structured transactions for everyday traders in Ghana.</p>
+        <div class="cta">
+            <a class="primary" href="{% url 'accounts:register_buyer' %}">Start Buying</a>
+            <a class="secondary" href="{% url 'accounts:register_seller' %}">Start Selling</a>
+        </div>
+    </section>
+
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'landingPage.js' %}"></script>
+</body>
+</html>
