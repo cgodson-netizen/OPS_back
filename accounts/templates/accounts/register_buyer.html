@@ -1,12 +1,239 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>Register as Buyer</title></head>
-<body>
-    <h2>Register as Buyer</h2>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Register</button>
-    </form>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Buyer Onboarding</title>
+    <link rel="stylesheet" href="{% static 'buyers_onboarding/signupPage.css' %}" />
+    <link rel="stylesheet" href="{% static 'buyers_onboarding/signupPage.responsive.css' %}" />
+  </head>
+  <body>
+    <h1 id="LogoText">OPS</h1>
+    <div class="container">
+      <div class="left-panel">
+        <h2 id="form-title">Buyers Onboarding</h2>
+        <p class="subtitle">
+          Create your buyer profile to start shopping with confidence.
+        </p>
+
+        <div
+          class="progress-container"
+          role="progressbar"
+          aria-valuemin="1"
+          aria-valuemax="3"
+          aria-valuenow="1"
+        >
+          <div class="progress-step active" data-step="1">
+            <span class="step-label">Account</span>
+            <span class="step-dot"></span>
+            <span class="segment-bar"></span>
+          </div>
+          <div class="progress-step" data-step="2">
+            <span class="step-label">Delivery</span>
+            <span class="step-dot"></span>
+            <span class="segment-bar"></span>
+          </div>
+          <div class="progress-step" data-step="3">
+            <span class="step-label">Preferences</span>
+            <span class="step-dot"></span>
+            <span class="segment-bar"></span>
+          </div>
+        </div>
+
+        {% if form.non_field_errors %}
+        <div class="form-errors">
+          {% for error in form.non_field_errors %}
+          <p style="color:red;">{{ error }}</p>
+          {% endfor %}
+        </div>
+        {% endif %}
+
+        <form id="buyer-onboarding-form" method="post" novalidate>
+          {% csrf_token %}
+
+          <!-- Step 1: Account Details -->
+          <div class="form-step active" data-step="1">
+            <button class="google-login" id="google-login-btn" type="button">
+              <img
+                src="{% static 'buyers_onboarding/Images/google icon.png' %}"
+                alt="Google Logo"
+                class="google-logo"
+              />
+              Sign up with Google
+            </button>
+            <div class="divider">or</div>
+
+            <div class="form-section">
+              <h3 class="section-title">Account Details</h3>
+
+              <div>
+                <label for="full-name">Full Name</label>
+                <input
+                  type="text"
+                  id="full-name"
+                  placeholder="Enter your full name"
+                  required
+                />
+                <span id="fullNameError" class="error-message">Full name is required</span>
+                {{ form.first_name.as_hidden }}
+                {{ form.last_name.as_hidden }}
+                {% for error in form.first_name.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
+                {% for error in form.last_name.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
+              </div>
+
+              <div>
+                <label for="id_email">Email</label>
+                {{ form.email }}
+                <span id="emailError" class="error-message">Invalid Email</span>
+                {% for error in form.email.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
+              </div>
+
+              <div>
+                <label for="id_phone_number">Phone Number (optional)</label>
+                {{ form.phone_number }}
+              </div>
+
+              <div>
+                <label for="id_password1">Password</label>
+                <div class="password-container">
+                  {{ form.password1 }}
+                  <img
+                    src="{% static 'buyers_onboarding/Images/hidden password.png' %}"
+                    alt="Show Password"
+                    class="toggle-password"
+                    id="togglePassword"
+                    data-hidden-icon="{% static 'buyers_onboarding/Images/hidden password.png' %}"
+                    data-visible-icon="{% static 'buyers_onboarding/Images/show password.png' %}"
+                  />
+                </div>
+                <span id="passwordError" class="error-message">Invalid Password</span>
+                {% for error in form.password1.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
+              </div>
+
+              <div>
+                <label for="id_password2">Confirm Password</label>
+                <div class="password-container">
+                  {{ form.password2 }}
+                  <img
+                    src="{% static 'buyers_onboarding/Images/hidden password.png' %}"
+                    alt="Show Password"
+                    class="toggle-password"
+                    id="toggleConfirmPassword"
+                    data-hidden-icon="{% static 'buyers_onboarding/Images/hidden password.png' %}"
+                    data-visible-icon="{% static 'buyers_onboarding/Images/show password.png' %}"
+                  />
+                </div>
+                <span id="confirmPasswordError" class="error-message">Passwords do not match</span>
+                {% for error in form.password2.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
+              </div>
+            </div>
+
+            <div class="step-actions single">
+              <button type="button" class="signup-btn" data-next>Next</button>
+            </div>
+          </div>
+
+          <!-- Step 2: Delivery Details (frontend only, not saved to DB) -->
+          <div class="form-step" data-step="2">
+            <div class="form-section">
+              <h3 class="section-title">Delivery Details</h3>
+              <div>
+                <label for="address">Delivery Address</label>
+                <textarea id="address" placeholder="Street, area, landmark"></textarea>
+                <span id="addressError" class="error-message">Delivery address is required</span>
+              </div>
+              <div>
+                <label for="city">City or Region</label>
+                <input type="text" id="city" placeholder="e.g. Accra, Kumasi" />
+                <span id="cityError" class="error-message">City or region is required</span>
+              </div>
+              <div>
+                <label for="delivery-preference">Delivery Preference</label>
+                <select id="delivery-preference">
+                  <option value="">Select a preference</option>
+                  <option value="delivery">Home delivery</option>
+                  <option value="pickup">Pickup</option>
+                  <option value="either">Either is fine</option>
+                </select>
+                <span id="deliveryError" class="error-message">Please select a delivery preference</span>
+              </div>
+            </div>
+            <div class="step-actions">
+              <button type="button" class="btn-secondary" data-prev>Back</button>
+              <button type="button" class="signup-btn" data-next>Next</button>
+            </div>
+          </div>
+
+          <!-- Step 3: Preferences (frontend only, not saved to DB) -->
+          <div class="form-step" data-step="3">
+            <div class="form-section">
+              <h3 class="section-title">Shopping Preferences (optional)</h3>
+              <p class="field-label">Categories of interest</p>
+              <div class="checkbox-grid">
+                <label><input type="checkbox" value="fashion" /> Fashion</label>
+                <label><input type="checkbox" value="electronics" /> Electronics</label>
+                <label><input type="checkbox" value="home" /> Home and Kitchen</label>
+                <label><input type="checkbox" value="beauty" /> Beauty</label>
+                <label><input type="checkbox" value="grocery" /> Groceries</label>
+                <label><input type="checkbox" value="services" /> Services</label>
+              </div>
+              <div>
+                <label for="budget-range">Budget Range</label>
+                <select id="budget-range">
+                  <option value="">Select a range</option>
+                  <option value="under-100">Under GHS 100</option>
+                  <option value="100-300">GHS 100 to 300</option>
+                  <option value="300-700">GHS 300 to 700</option>
+                  <option value="700-plus">GHS 700 and above</option>
+                </select>
+              </div>
+              <div>
+                <label for="purchase-frequency">Purchase Frequency</label>
+                <select id="purchase-frequency">
+                  <option value="">Select a frequency</option>
+                  <option value="daily">Daily</option>
+                  <option value="weekly">Weekly</option>
+                  <option value="monthly">Monthly</option>
+                  <option value="occasionally">Occasionally</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-section">
+              <label>
+                <input type="checkbox" id="terms" required />
+                I agree to the Terms, Privacy Policy, and Fees
+              </label>
+            </div>
+            <div class="step-actions">
+              <button type="button" class="btn-secondary" data-prev>Back</button>
+              <button type="submit" class="signup-btn">Finish</button>
+            </div>
+          </div>
+        </form>
+
+        <p class="login-link">
+          Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
+        </p>
+      </div>
+    </div>
+
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'buyers_onboarding/signupPage.js' %}"></script>
+    <script>
+      // Sync full name field to Django's hidden first_name and last_name fields
+      const fullNameInput = document.getElementById("full-name");
+      const firstNameInput = document.getElementById("id_first_name");
+      const lastNameInput = document.getElementById("id_last_name");
+
+      function syncName() {
+        if (!fullNameInput || !firstNameInput || !lastNameInput) return;
+        const parts = fullNameInput.value.trim().split(/\s+/).filter(Boolean);
+        firstNameInput.value = parts[0] || "";
+        lastNameInput.value = parts.slice(1).join(" ") || "";
+      }
+
+      fullNameInput?.addEventListener("input", syncName);
+    </script>
+  </body>
 </html>
