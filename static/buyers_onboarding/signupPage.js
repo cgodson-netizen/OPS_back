@@ -1,9 +1,9 @@
 const form = document.getElementById("buyer-onboarding-form");
 const fullNameInput = document.getElementById("full-name");
-const emailInput = document.getElementById("email");
-const phoneInput = document.getElementById("phone");
-const passwordInput = document.getElementById("password");
-const confirmPasswordInput = document.getElementById("confirm-password");
+const emailInput = document.getElementById("id_email");
+const phoneInput = document.getElementById("id_phone_number");
+const passwordInput = document.getElementById("id_password1");
+const confirmPasswordInput = document.getElementById("id_password2");
 const addressInput = document.getElementById("address");
 const cityInput = document.getElementById("city");
 const deliveryPreferenceSelect = document.getElementById("delivery-preference");
@@ -40,14 +40,16 @@ function validatePassword(password) {
 }
 
 function setError(input, errorElement, message) {
+  if (!errorElement) return;
   errorElement.textContent = message;
   errorElement.style.display = "block";
-  input.setAttribute("aria-invalid", "true");
+  if (input) input.setAttribute("aria-invalid", "true");
 }
 
 function clearError(input, errorElement) {
+  if (!errorElement) return;
   errorElement.style.display = "none";
-  input.removeAttribute("aria-invalid");
+  if (input) input.removeAttribute("aria-invalid");
 }
 
 function resetErrors() {
@@ -58,7 +60,7 @@ function resetErrors() {
   clearError(addressInput, addressError);
   clearError(cityInput, cityError);
   clearError(deliveryPreferenceSelect, deliveryError);
-  termsCheckbox.style.outline = "none";
+  if (termsCheckbox) termsCheckbox.style.outline = "none";
 }
 
 function updateProgress() {
@@ -66,11 +68,9 @@ function updateProgress() {
     const stepNumber = Number(step.dataset.step);
     step.classList.toggle("completed", stepNumber < currentStep);
     step.classList.toggle("active", stepNumber === currentStep);
-
     const fillAmount = stepNumber < currentStep ? 100 : 0;
     step.style.setProperty("--segment-fill", `${fillAmount}%`);
   });
-
   if (progressContainer) {
     progressContainer.setAttribute("aria-valuenow", String(currentStep));
   }
@@ -79,10 +79,7 @@ function updateProgress() {
 function showStep(stepNumber) {
   currentStep = stepNumber;
   steps.forEach((step) => {
-    step.classList.toggle(
-      "active",
-      Number(step.dataset.step) === currentStep
-    );
+    step.classList.toggle("active", Number(step.dataset.step) === currentStep);
   });
   updateProgress();
 }
@@ -92,10 +89,10 @@ function validateStep(stepNumber) {
   let hasError = false;
 
   if (stepNumber === 1) {
-    const fullName = fullNameInput.value.trim();
-    const email = emailInput.value.trim();
-    const password = passwordInput.value.trim();
-    const confirmPassword = confirmPasswordInput.value.trim();
+    const fullName = fullNameInput ? fullNameInput.value.trim() : "";
+    const email = emailInput ? emailInput.value.trim() : "";
+    const password = passwordInput ? passwordInput.value.trim() : "";
+    const confirmPassword = confirmPasswordInput ? confirmPasswordInput.value.trim() : "";
 
     if (!fullName) {
       setError(fullNameInput, fullNameError, "Full name is required.");
@@ -108,28 +105,20 @@ function validateStep(stepNumber) {
     }
 
     if (!validatePassword(password)) {
-      setError(
-        passwordInput,
-        passwordError,
-        "Use 6+ characters with upper, lower, number, and symbol."
-      );
+      setError(passwordInput, passwordError, "Use 6+ characters with upper, lower, number, and symbol.");
       hasError = true;
     }
 
     if (password !== confirmPassword) {
-      setError(
-        confirmPasswordInput,
-        confirmPasswordError,
-        "Passwords do not match."
-      );
+      setError(confirmPasswordInput, confirmPasswordError, "Passwords do not match.");
       hasError = true;
     }
   }
 
   if (stepNumber === 2) {
-    const address = addressInput.value.trim();
-    const city = cityInput.value.trim();
-    const deliveryPreference = deliveryPreferenceSelect.value;
+    const address = addressInput ? addressInput.value.trim() : "";
+    const city = cityInput ? cityInput.value.trim() : "";
+    const deliveryPreference = deliveryPreferenceSelect ? deliveryPreferenceSelect.value : "";
 
     if (!address) {
       setError(addressInput, addressError, "Delivery address is required.");
@@ -142,17 +131,13 @@ function validateStep(stepNumber) {
     }
 
     if (!deliveryPreference) {
-      setError(
-        deliveryPreferenceSelect,
-        deliveryError,
-        "Please select a delivery preference."
-      );
+      setError(deliveryPreferenceSelect, deliveryError, "Please select a delivery preference.");
       hasError = true;
     }
   }
 
   if (stepNumber === 3) {
-    if (!termsCheckbox.checked) {
+    if (termsCheckbox && !termsCheckbox.checked) {
       termsCheckbox.style.outline = "2px solid red";
       hasError = true;
     }
@@ -176,9 +161,8 @@ prevButtons.forEach((button) => {
 });
 
 form.addEventListener("submit", (event) => {
-  event.preventDefault();
-
   if (currentStep < steps.length) {
+    event.preventDefault();
     if (validateStep(currentStep)) {
       showStep(currentStep + 1);
     }
@@ -186,46 +170,55 @@ form.addEventListener("submit", (event) => {
   }
 
   if (!validateStep(currentStep)) {
+    event.preventDefault();
     return;
   }
 
+  // All steps valid — let Django handle real submission
   const submitButton = form.querySelector("button[type='submit']");
-  submitButton.disabled = true;
-  submitButton.textContent = "Creating profile...";
-
-  setTimeout(() => {
-    alert("Buyer profile created successfully!");
-    form.reset();
-    submitButton.disabled = false;
-    submitButton.textContent = "Finish";
-    showStep(1);
-  }, 300);
+  if (submitButton) {
+    submitButton.disabled = true;
+    submitButton.textContent = "Creating profile...";
+  }
 });
 
 showStep(1);
 
 if (togglePassword) {
   togglePassword.addEventListener("click", () => {
-    const type =
-      passwordInput.getAttribute("type") === "password" ? "text" : "password";
-    passwordInput.setAttribute("type", type);
+    const field = document.getElementById("id_password1");
+    if (!field) return;
+    const type = field.getAttribute("type") === "password" ? "text" : "password";
+    field.setAttribute("type", type);
     togglePassword.src =
       type === "password"
-        ? "Images/hidden password.png"
-        : "Images/show password.png";
+        ? togglePassword.dataset.hiddenIcon
+        : togglePassword.dataset.visibleIcon;
   });
 }
 
 if (toggleConfirmPassword) {
   toggleConfirmPassword.addEventListener("click", () => {
-    const type =
-      confirmPasswordInput.getAttribute("type") === "password"
-        ? "text"
-        : "password";
-    confirmPasswordInput.setAttribute("type", type);
+    const field = document.getElementById("id_password2");
+    if (!field) return;
+    const type = field.getAttribute("type") === "password" ? "text" : "password";
+    field.setAttribute("type", type);
     toggleConfirmPassword.src =
       type === "password"
-        ? "Images/hidden password.png"
-        : "Images/show password.png";
+        ? toggleConfirmPassword.dataset.hiddenIcon
+        : toggleConfirmPassword.dataset.visibleIcon;
   });
 }
+
+// Sync full name to Django hidden fields
+const firstNameInput = document.getElementById("id_first_name");
+const lastNameInput = document.getElementById("id_last_name");
+
+function syncName() {
+  if (!fullNameInput || !firstNameInput || !lastNameInput) return;
+  const parts = fullNameInput.value.trim().split(/\s+/).filter(Boolean);
+  firstNameInput.value = parts[0] || "";
+  lastNameInput.value = parts.slice(1).join(" ") || "";
+}
+
+if (fullNameInput) fullNameInput.addEventListener("input", syncName);
