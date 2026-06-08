@@ -23,7 +23,6 @@ form.addEventListener("submit", (event) => {
 
   const identifier = identifierInput ? identifierInput.value.trim() : "";
   const password = passwordInput ? passwordInput.value.trim() : "";
-
   let hasError = false;
 
   if (!identifier || !validateEmail(identifier)) {
@@ -46,14 +45,13 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  // Save remembered identifier
   if (rememberMeCheckbox && rememberMeCheckbox.checked) {
     localStorage.setItem("opsRememberedIdentifier", identifier);
   } else {
     localStorage.removeItem("opsRememberedIdentifier");
   }
 
-  // Let Django handle the real submission
+  // Let Django handle real submission
   const submitButton = form.querySelector("button[type='submit']");
   if (submitButton) {
     submitButton.disabled = true;
@@ -67,10 +65,9 @@ if (togglePassword) {
     if (!field) return;
     const type = field.getAttribute("type") === "password" ? "text" : "password";
     field.setAttribute("type", type);
-    togglePassword.src =
-      type === "password"
-        ? togglePassword.dataset.hiddenIcon
-        : togglePassword.dataset.visibleIcon;
+    togglePassword.src = type === "password"
+      ? togglePassword.dataset.hiddenIcon
+      : togglePassword.dataset.visibleIcon;
   });
 }
 

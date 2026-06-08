@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Seller Dashboard</title>
+    <link rel="stylesheet" href="sellersDashboard.css" />
+  </head>
+  <body>
+    <!-- Backend route hooks:
+      products:seller_product_list
+      products:product_create
+      products:product_edit
+      products:product_delete
+      products:product_toggle_active
+      orders:seller_order_list
+      orders:seller_order_detail
+      orders:update_order_status
+      accounts:logout
+    -->
+    <div class="dashboard-shell">
+      <button
+        class="sidebar-toggle"
+        id="sidebar-toggle"
+        type="button"
+        aria-controls="seller-sidebar"
+        aria-expanded="false"
+        aria-label="Open navigation"
+      >
+        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+        </svg>
+      </button>
+
+      <aside class="sidebar" id="seller-sidebar">
+        <div class="brand-block">
+          <img
+            src="../Images/OPS Logo FW.png"
+            alt="OPS"
+            class="brand-mark"
+          />
+          <div class="brand-copy-block">
+            <h1 class="brand-title">Dashboard</h1>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Seller dashboard navigation">
+          <a class="nav-link is-active" href="#overview" data-route="overview" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path
+                  d="M4 10.5 12 4l8 6.5V20H4z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                />
+                <path
+                  d="M9.5 20v-5h5v5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                />
+              </svg>
+            </span>
+            <span>Overview</span>
+          </a>
+          <a class="nav-link" href="#" data-route="products:seller_product_list">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <rect
+                  x="4"
+                  y="5"
+                  width="16"
+                  height="14"
+                  rx="2.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.8"
+                />
+                <path
+                  d="M8 9h8M8 13h8M8 17h5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.8"
+                />
+              </svg>
+            </span>
+            <span>My Products</span>
+          </a>
+          <a class="nav-link" href="#" data-route="products:product_create">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path
+                  d="M12 5v14M5 12h14"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="1.8"
+                />
+              </svg>
+            </span>
+            <span>Add Product</span>
+          </a>
+          <a class="nav-link" href="#" data-route="orders:seller_order_list">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path
+                  d="M4 6.5h16M7 3.5v3M17 3.5v3M6.5 20h11A2.5 2.5 0 0 0 20 17.5v-8A2.5 2.5 0 0 0 17.5 7h-11A2.5 2.5 0 0 0 4 9.5v8A2.5 2.5 0 0 0 6.5 20Z"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                />
+              </svg>
+            </span>
+            <span>Incoming Orders</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p class="sidebar-footer-copy">Last synced just now</p>
+          <a class="logout-link" href="../index.html" data-route="accounts:logout">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path
+                  d="M10 7V5.5A2.5 2.5 0 0 1 12.5 3h5A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-5A2.5 2.5 0 0 1 10 18.5V17"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                />
+                <path
+                  d="M3 12h11M7 8l-4 4 4 4"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="1.8"
+                />
+              </svg>
+            </span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+      <main class="dashboard-main" id="overview" data-view="overview">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <h2 id="greeting-title">Good morning, Seller.</h2>
+            <p class="topbar-text">
+              <span id="seller-name">Seller Name</span>
+              <span id="topbar-snapshot">— a quick snapshot of your store performance, stock,
+                and active orders.</span>
+            </p>
+            <div class="topbar-actions">
+              <a class="button button-primary" href="#" data-route="products:product_create">
+                Add Product
+              </a>
+              <a class="button button-secondary" href="#" data-route="orders:seller_order_list">
+                Incoming Orders
+              </a>
+            </div>
+          </div>
+
+          <div class="topbar-meta">
+            <div class="date-chip" id="current-date">Wednesday, 3 June 2026</div>
+          </div>
+        </header>
+
+        <article class="panel add-product-panel" id="add-product-panel" hidden>
+          <div class="panel-head">
+            <div>
+              <p class="panel-kicker">Add product</p>
+              <h3>Publish a new listing</h3>
+            </div>
+            <a class="panel-link" href="#overview" data-route="products:seller_product_list" id="add-product-back-link">
+              Back to products
+            </a>
+          </div>
+
+          <form class="product-form" id="product-form">
+            <div class="product-form-grid">
+              <section class="form-card upload-card">
+                <div class="form-section-head">
+                  <div>
+                    <p class="form-section-kicker">Product image</p>
+                    <h4>Upload image</h4>
+                  </div>
+                  <span class="form-section-note">Optional preview</span>
+                </div>
+
+                <div class="image-upload-row">
+                  <label class="upload-avatar" for="product-image-input" aria-label="Upload product image">
+                    <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+                      <path
+                        d="M12 16V4m0 0 4.5 4.5M12 4 7.5 8.5M5 17.5V20h14v-2.5"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="1.8"
+                      />
+                    </svg>
+                  </label>
+
+                  <label class="upload-dropzone" for="product-image-input">
+                    <strong id="product-image-copy">Click to upload image</strong>
+                    <span id="product-image-support">JPG or PNG</span>
+                  </label>
+                </div>
+
+                <input
+                  class="upload-input"
+                  id="product-image-input"
+                  name="image"
+                  type="file"
+                  accept="image/png,image/jpeg,image/jpg"
+                />
+              </section>
+
+              <section class="form-card detail-card">
+                <div class="form-section-head">
+                  <div>
+                    <p class="form-section-kicker">Product details</p>
+                    <h4>Listing details</h4>
+                  </div>
+                  <span class="form-section-note">Create or edit</span>
+                </div>
+
+                <div class="field-grid">
+                  <label class="field">
+                    <span>Product name</span>
+                    <input
+                      class="field-control"
+                      type="text"
+                      name="name"
+                      placeholder="Ankara midi dress"
+                      required
+                    />
+                  </label>
+
+                  <label class="field">
+                    <span>Category</span>
+                    <select class="field-control" name="category">
+                      <option value="" selected disabled>Select a category</option>
+                      <option>Fashion</option>
+                      <option>Accessories</option>
+                      <option>Footwear</option>
+                      <option>Beauty</option>
+                      <option>Home &amp; Living</option>
+                      <option>Electronics</option>
+                    </select>
+                  </label>
+
+                  <label class="field">
+                    <span>Price</span>
+                    <input
+                      class="field-control"
+                      type="number"
+                      name="price"
+                      min="0"
+                      step="0.01"
+                      placeholder="320"
+                      required
+                    />
+                  </label>
+
+                  <label class="field">
+                    <span>Stock</span>
+                    <input
+                      class="field-control"
+                      type="number"
+                      name="stock"
+                      min="0"
+                      step="1"
+                      placeholder="5"
+                      required
+                    />
+                  </label>
+
+                  <label class="field field--checkbox">
+                    <input class="field-toggle" type="checkbox" name="is_active" checked />
+                    <div>
+                      <span>Show in store</span>
+                      <small>Buyers can see this product when it is on.</small>
+                    </div>
+                  </label>
+
+                  <label class="field field--full">
+                    <span>Description</span>
+                    <textarea
+                      class="field-control field-control--textarea"
+                      name="description"
+                      rows="5"
+                      placeholder="Write a short product description, materials, sizes, and delivery notes."
+                    ></textarea>
+                  </label>
+                </div>
+              </section>
+            </div>
+
+            <div class="form-actions product-form-actions">
+              <a class="button button-outline" href="#overview" data-route="products:seller_product_list">
+                Cancel
+              </a>
+              <button class="button button-primary" type="submit" id="product-form-submit">Register product</button>
+            </div>
+          </form>
+        </article>
+
+        <section class="metric-grid" id="metric-grid" aria-label="Dashboard metrics"></section>
+
+        <section class="content-grid">
+          <article class="panel products-panel" id="products-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">My products</p>
+                <h3>Manage your listings</h3>
+              </div>
+              <a class="panel-link" href="#" data-route="products:product_create" id="products-panel-link">+ Add New Product</a>
+            </div>
+            <div class="product-panel-view" id="product-cards-view">
+              <div class="product-list" id="product-list"></div>
+            </div>
+            <div class="product-panel-view product-management-view" id="product-management-view" hidden>
+              <div class="product-management-header">
+                <p class="product-management-copy">
+                  Each listing stays easy to manage: name, category, price, stock, image, and status.
+                </p>
+              </div>
+              <div class="product-management-list" id="product-management-list"></div>
+            </div>
+          </article>
+
+          <article class="panel orders-panel" id="orders-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Incoming orders</p>
+                <h3>Recent requests</h3>
+              </div>
+              <a class="panel-link" href="#" data-route="orders:seller_order_list">Open orders</a>
+            </div>
+            <div class="orders-panel-shell">
+              <div class="orders-preview-view" id="orders-preview-view">
+                <div class="orders-view-copy">
+                  <p class="orders-panel-copy">
+                    Keep an eye on the newest orders from buyers.
+                  </p>
+                  <span class="status-chip status-chip--neutral" id="orders-preview-count">0 orders</span>
+                </div>
+                <div class="orders-preview-list" id="orders-preview-list"></div>
+              </div>
+
+              <div class="orders-list-view" id="orders-list-view" hidden>
+                <div class="orders-view-copy">
+                  <p class="orders-panel-copy">
+                    Review incoming orders, confirm the buyer details, and move each request to the right status.
+                  </p>
+                  <span class="status-chip status-chip--neutral" id="orders-list-count">0 orders</span>
+                </div>
+                <div class="orders-list" id="orders-list"></div>
+              </div>
+
+              <div class="order-detail-view" id="order-detail-view" hidden>
+                <div class="order-detail-topline">
+                  <button class="order-detail-back" type="button" id="order-detail-back">← Back to orders</button>
+                  <span class="status-pill" id="order-detail-status-pill">New</span>
+                </div>
+
+                <div class="order-detail-card">
+                  <div class="order-detail-header">
+                    <div>
+                      <p class="panel-kicker">Order details</p>
+                      <h4 id="order-detail-id">Order #OPS-0000</h4>
+                    </div>
+                    <strong class="order-detail-amount" id="order-detail-amount">GH₵ 0.00</strong>
+                  </div>
+
+                  <p class="order-detail-note" id="order-detail-note">
+                    Open an order to see the buyer details, item summary, and status update form.
+                  </p>
+
+                  <div class="order-detail-grid">
+                    <article class="order-detail-meta">
+                      <span>Buyer</span>
+                      <strong id="order-detail-buyer">Buyer name</strong>
+                      <p id="order-detail-summary">Order summary</p>
+                    </article>
+
+                    <article class="order-detail-meta">
+                      <span>Delivery address</span>
+                      <strong id="order-detail-address">Delivery address</strong>
+                      <p>Buyer delivery location</p>
+                    </article>
+
+                    <article class="order-detail-meta">
+                      <span>Ordered</span>
+                      <strong id="order-detail-placed">—</strong>
+                      <p>When the order was placed</p>
+                    </article>
+                  </div>
+
+                  <div class="order-items-block">
+                    <div class="order-section-head">
+                      <h5>Your items in this order</h5>
+                    </div>
+                    <div class="order-items-list" id="order-detail-items"></div>
+                  </div>
+
+                  <form class="order-status-form" id="order-status-form">
+                    <label class="field order-status-field">
+                      <span>Status</span>
+                      <select class="field-control" id="order-status-select" name="status">
+                        <option value="New">New</option>
+                        <option value="Confirmed">Confirmed</option>
+                        <option value="Processing">Processing</option>
+                        <option value="Ready">Ready</option>
+                        <option value="Shipped">Shipped</option>
+                        <option value="Delivered">Delivered</option>
+                      </select>
+                    </label>
+
+                    <button class="button button-primary" type="submit">Update Status</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel tasks-panel" id="tasks-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Action list</p>
+                <h3>What to do next</h3>
+              </div>
+              <span class="status-chip status-chip--neutral" id="task-count">4 tasks</span>
+            </div>
+            <div class="task-progress">
+              <div class="task-progress-head">
+                <span>Checklist progress</span>
+                <strong id="task-progress-label">3/4 complete</strong>
+              </div>
+              <div class="progress-track" aria-hidden="true">
+                <span id="task-progress-bar"></span>
+              </div>
+            </div>
+            <div class="task-list" id="task-list"></div>
+            <a class="button button-outline button-block" href="#" data-route="products:product_create">
+              Publish a new product
+            </a>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="../media.js"></script>
+    <script src="sellersDasboard.js"></script>
+  </body>
+</html>

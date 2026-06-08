@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Buyer Dashboard</title>
+    <link rel="stylesheet" href="buyersDashboard.css" />
+  </head>
+  <body>
+    <!-- Backend route hooks:
+      products:product_list
+      orders:cart_detail
+      orders:buyer_order_list
+      accounts:logout
+    -->
+    <header class="topbar">
+      <button
+        class="nav-toggle"
+        id="buyer-nav-toggle"
+        type="button"
+        aria-controls="buyer-topnav"
+        aria-expanded="false"
+        aria-label="Open navigation"
+      >
+        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+        </svg>
+      </button>
+
+      <a class="brand-lockup" href="#overview" data-route="products:product_list">
+        <img class="brand-mark" src="../Images/OPS Logo FW.png" alt="OPS" />
+      </a>
+
+      <nav class="topnav" id="buyer-topnav" aria-label="Buyer dashboard navigation">
+        <a class="nav-link is-active" href="#overview" data-route="products:product_list" aria-current="page">
+          Browse Products
+        </a>
+        <a class="nav-link" href="./My Cart/my_cart.html" data-route="orders:cart_detail">My Cart</a>
+        <a class="nav-link" href="./my Orders/my_orders.html" data-route="orders:buyer_order_list">My Orders</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="icon-button" id="search-shortcut" type="button" aria-label="Search products">
+          <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.8" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+          </svg>
+        </button>
+
+        <a class="icon-button icon-button--cart" href="./My Cart/my_cart.html" data-route="orders:cart_detail" aria-label="My cart">
+          <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+            <path
+              d="M6 7h15l-1.7 7.2a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.5L5.3 4.8H2"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+            />
+            <circle cx="10" cy="19" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="17" cy="19" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          <span class="cart-badge" id="cart-badge" hidden>0</span>
+        </a>
+
+        <a
+          class="avatar-chip"
+          href="../index.html"
+          data-route="accounts:logout"
+          id="logout-avatar"
+          aria-label="Logout"
+        >
+          AM
+        </a>
+      </div>
+    </header>
+    <div class="nav-backdrop" id="buyer-nav-backdrop" aria-hidden="true"></div>
+
+    <main class="dashboard-main" id="dashboard-main" data-view="overview">
+      <section class="overview-section" id="overview-section">
+        <article class="hero-section" aria-label="Featured shopping area">
+          <div class="hero-stage">
+            <img
+              class="hero-image"
+              src="../Images/seamstress.png"
+              alt=""
+              aria-hidden="true"
+            />
+            <div class="hero-stage-overlay" aria-hidden="true"></div>
+            <!-- <div class="hero-word" id="hero-word">Shop</div> -->
+          </div>
+
+          <div class="hero-slab">
+            <div class="hero-copy">
+              <p class="hero-kicker" id="hero-greeting">Welcome back, Buyer.</p>
+              <h1 id="hero-title">Give All You Need</h1>
+              <p class="hero-text" id="hero-text">
+                Search the latest drops and keep tabs on your cart from one clean place.
+              </p>
+            </div>
+
+            <form class="hero-search" id="product-search-form">
+              <label class="search-field" for="product-search">
+                <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6.8" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path
+                    d="m16.5 16.5 3.9 3.9"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-linecap="round"
+                    stroke-width="1.6"
+                  />
+                </svg>
+                <input
+                  id="product-search"
+                  name="search"
+                  type="search"
+                  placeholder="Search on OPS"
+                  autocomplete="off"
+                />
+              </label>
+              <button class="search-button" type="submit">Search</button>
+            </form>
+          </div>
+        </article>
+
+        <section class="shop-layout" aria-label="Product discovery section">
+          <aside class="filters-panel" aria-label="Product filters">
+            <article class="sidebar-card">
+              <p class="sidebar-kicker">Category</p>
+              <h2>Browse by type</h2>
+              <div class="filter-list" id="category-list"></div>
+            </article>
+
+            <article class="sidebar-card">
+              <p class="sidebar-kicker">Highlights</p>
+              <div class="filter-list filter-list--stacked" id="quick-filter-list"></div>
+            </article>
+
+            <a
+              class="sidebar-action sidebar-action--logout"
+              href="../index.html"
+              data-route="accounts:logout"
+              id="sidebar-logout-link"
+            >
+              Logout
+            </a>
+          </aside>
+
+          <section class="catalog-panel">
+            <div class="catalog-head">
+              <div>
+                <p class="catalog-kicker">New drops</p>
+                <h3>Fresh picks for your feed</h3>
+              </div>
+              <p class="catalog-summary" id="catalog-summary">
+                Loading products...
+              </p>
+            </div>
+
+            <section class="product-grid" id="product-grid" aria-label="Featured products"></section>
+            <nav class="pager" id="product-pager" aria-label="Products pagination"></nav>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="../media.js"></script>
+    <script src="buyersDashboard.js"></script>
+  </body>
+</html>

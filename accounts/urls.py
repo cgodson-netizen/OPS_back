@@ -12,4 +12,8 @@ urlpatterns = [
     path('redirect/', views.role_redirect, name='role_redirect'),
     path('dashboard/seller/', views.seller_dashboard, name='seller_dashboard'),
     path('dashboard/buyer/', views.buyer_dashboard, name='buyer_dashboard'),
+    path('password-reset/', views.password_reset_request, name='password_reset_request'),
+    path('verify-otp/', views.verify_otp, name='verify_otp'),
+    path('set-new-password/', views.set_new_password, name='set_new_password'),
+    path('resend-otp/', views.resend_otp, name='resend_otp'),
 ]

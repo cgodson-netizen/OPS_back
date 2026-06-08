@@ -1,0 +1,75 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Verify OTP</title>
+    <link rel="stylesheet" href="{% static 'verify_otp/verifyOtp.css' %}" />
+  </head>
+  <body>
+    <h1 id="LogoText">OPS</h1>
+    <main class="verify-shell">
+      <section class="verify-card" aria-labelledby="verify-title">
+        <div class="verify-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation">
+            <path d="M12 3 6.75 5.15v5.54c0 3.53 2.15 6.74 5.25 8.12 3.1-1.38 5.25-4.59 5.25-8.12V5.15Z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/>
+            <path d="m9.4 11.9 1.7 1.7 3.5-3.5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/>
+          </svg>
+        </div>
+
+        <h2 id="verify-title">Enter Verification Code</h2>
+        <p class="subtitle">We've sent a 4-digit code to <span id="delivery-target">{{ email }}</span>.</p>
+
+        {% if error %}
+        <p style="color:red;">{{ error }}</p>
+        {% endif %}
+
+        <form id="verify-form" method="post" novalidate>
+          {% csrf_token %}
+          <div class="otp-grid" id="otp-grid">
+            <input class="otp-input" type="text" name="otp_1" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 1" autocomplete="one-time-code" />
+            <input class="otp-input" type="text" name="otp_2" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 2" />
+            <input class="otp-input" type="text" name="otp_3" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 3" />
+            <input class="otp-input" type="text" name="otp_4" inputmode="numeric" pattern="[0-9]*" maxlength="1" aria-label="Digit 4" />
+          </div>
+          <p id="otpError" class="error-message">Enter the full 4-digit verification code.</p>
+
+          <div class="resend-row">
+            <span>Didn't get a code?</span>
+            <button type="button" class="text-action" id="resend-code">Click to resend.</button>
+            <span class="timer" id="resend-timer" aria-live="polite">Available in 30s</span>
+          </div>
+          <p class="resend-feedback" id="resend-feedback" aria-live="polite"></p>
+          <div class="divider" aria-hidden="true"></div>
+
+          <div class="action-row">
+            <a class="ghost-btn" href="{% url 'accounts:password_reset_request' %}">Cancel</a>
+            <button type="submit" class="primary-btn" id="verify-button">Verify</button>
+          </div>
+          <p class="status-message" id="status-message" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'verify_otp/verifyOtp.js' %}"></script>
+    <script>
+      // Resend OTP via AJAX
+      document.getElementById('resend-code').addEventListener('click', function() {
+        fetch("{% url 'accounts:resend_otp' %}", {
+          method: 'POST',
+          headers: {
+            'X-CSRFToken': '{{ csrf_token }}',
+            'Content-Type': 'application/json'
+          }
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'sent') {
+            document.getElementById('resend-feedback').textContent = 'A new code has been sent.';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

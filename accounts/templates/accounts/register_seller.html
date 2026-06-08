@@ -8,15 +8,15 @@
     <link rel="stylesheet" href="{% static 'accounts/seller_onboarding/signupPage.css' %}" />
   </head>
   <body>
-    <h1 id="LogoText">OPS</h1>
+    <a class="brand-logo" href="{% url 'accounts:homepage' %}" aria-label="OPS home">
+      <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="brand-logo-mark" />
+    </a>
     <div class="container">
       <div class="left-panel">
-        <h2 id="form-title">Seller Onboarding</h2>
-        <p class="subtitle">
-          Set up your store profile to start selling confidently.
-        </p>
+        <h2 id="form-title">Sellers Onboarding</h2>
+        <p class="subtitle">Set up your store profile to start selling confidently.</p>
 
-        <div class="progress-container" role="progressbar" aria-valuemin="1" aria-valuemax="3" aria-valuenow="1">
+        <div class="progress-container" role="progressbar" aria-valuemin="1" aria-valuemax="2" aria-valuenow="1">
           <div class="progress-step active" data-step="1">
             <span class="step-label">Account</span>
             <span class="step-dot"></span>
@@ -24,11 +24,6 @@
           </div>
           <div class="progress-step" data-step="2">
             <span class="step-label">Business</span>
-            <span class="step-dot"></span>
-            <span class="segment-bar"></span>
-          </div>
-          <div class="progress-step" data-step="3">
-            <span class="step-label">Payout</span>
             <span class="step-dot"></span>
             <span class="segment-bar"></span>
           </div>
@@ -47,70 +42,57 @@
 
           <!-- Step 1: Account Details -->
           <div class="form-step active" data-step="1">
-            <button class="google-login" type="button">
-              <img src="{% static 'accounts/seller_onboarding/images/google-icon.png' %}" alt="Google Logo" class="google-logo">
+            <button class="google-login" id="google-login-btn" type="button">
+              <img src="{% static 'accounts/seller_onboarding/Images/google-icon.png' %}" alt="Google Logo" class="google-logo" />
               Sign up with Google
             </button>
-            <p class="helper-text">Google sign up is not connected yet, use the form below.</p>
             <div class="divider">or</div>
 
             <div class="form-section">
               <h3 class="section-title">Account Details</h3>
-
               <div>
                 <label for="full-name">Full Name</label>
-                <input type="text" id="full-name" placeholder="Enter your full name" required>
-                <span id="fullNameError" class="error-message">First and last name are required.</span>
+                <input type="text" id="full-name" placeholder="Enter your full name" required />
+                <span id="fullNameError" class="error-message">Full name is required</span>
                 {{ form.first_name.as_hidden }}
                 {{ form.last_name.as_hidden }}
                 {% for error in form.first_name.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
                 {% for error in form.last_name.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
               </div>
-
               <div>
                 <label for="id_email">Email</label>
                 {{ form.email }}
-                <span id="emailError" class="error-message">Please enter a valid email address.</span>
+                <span id="emailError" class="error-message">Invalid Email</span>
                 {% for error in form.email.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
               </div>
-
               <div>
                 <label for="id_phone_number">Phone Number</label>
                 {{ form.phone_number }}
-                <span id="phoneError" class="error-message">Phone number is required.</span>
+                <span id="phoneError" class="error-message">Phone number is required</span>
                 {% for error in form.phone_number.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
               </div>
-
               <div>
                 <label for="id_password1">Password</label>
                 <div class="password-container">
                   {{ form.password1 }}
-                  <img
-                    src="{% static 'accounts/seller_onboarding/images/hidden-password.png' %}"
-                    alt="Toggle password visibility"
-                    class="toggle-password"
-                    id="togglePassword"
-                    data-hidden-icon="{% static 'accounts/seller_onboarding/images/hidden-password.png' %}"
-                    data-visible-icon="{% static 'accounts/seller_onboarding/images/show-password.png' %}">
+                  <img src="{% static 'accounts/seller_onboarding/Images/hidden-password.png' %}"
+                    alt="Show Password" class="toggle-password" id="togglePassword"
+                    data-hidden-icon="{% static 'accounts/seller_onboarding/Images/hidden-password.png' %}"
+                    data-visible-icon="{% static 'accounts/seller_onboarding/Images/show-password.png' %}" />
                 </div>
-                <span id="passwordError" class="error-message">Use at least 8 characters.</span>
-                {% if form.password1.help_text %}<div class="field-hint">{{ form.password1.help_text|safe }}</div>{% endif %}
+                <span id="passwordError" class="error-message">Invalid Password</span>
                 {% for error in form.password1.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
               </div>
-
               <div>
                 <label for="id_password2">Confirm Password</label>
                 <div class="password-container">
                   {{ form.password2 }}
-                  <img
-                    src="{% static 'accounts/seller_onboarding/images/hidden-password.png' %}"
-                    alt="Toggle confirm password visibility"
-                    class="toggle-password"
-                    id="toggleConfirmPassword"
+                  <img src="{% static 'accounts/seller_onboarding/Images/hidden-password.png' %}"
+                    alt="Show Password" class="toggle-password" id="toggleConfirmPassword"
                     data-hidden-icon="{% static 'accounts/seller_onboarding/Images/hidden-password.png' %}"
-                    data-visible-icon="{% static 'accounts/seller_onboarding/Images/show-password.png' %}">
+                    data-visible-icon="{% static 'accounts/seller_onboarding/Images/show-password.png' %}" />
                 </div>
-                <span id="confirmPasswordError" class="error-message">Passwords do not match.</span>
+                <span id="confirmPasswordError" class="error-message">Passwords do not match</span>
                 {% for error in form.password2.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
               </div>
             </div>
@@ -124,12 +106,10 @@
           <div class="form-step" data-step="2">
             <div class="form-section">
               <h3 class="section-title">Business Details</h3>
-              <p class="step-note">These fields are ready for backend support when you extend the seller profile model.</p>
-
               <div>
                 <label for="business-name">Business Name</label>
-                <input type="text" id="business-name" name="business_name" placeholder="e.g. Ama's Fashion House" required>
-                <span id="businessNameError" class="error-message">Business name is required.</span>
+                <input type="text" id="business-name" name="business_name" placeholder="e.g. Ama's Fashion House" required />
+                <span id="businessNameError" class="error-message">Business name is required</span>
               </div>
               <div>
                 <label for="seller-type">Seller Type</label>
@@ -138,89 +118,39 @@
                   <option value="individual">Individual</option>
                   <option value="registered">Registered business</option>
                 </select>
-                <span id="sellerTypeError" class="error-message">Please select a seller type.</span>
+                <span id="sellerTypeError" class="error-message">Please select a seller type</span>
               </div>
               <div>
                 <label for="business-location">Business Location</label>
-                <input type="text" id="business-location" name="business_location" placeholder="City or region" required>
-                <span id="locationError" class="error-message">Business location is required.</span>
+                <input type="text" id="business-location" name="business_location" placeholder="City or region" required />
+                <span id="locationError" class="error-message">Business location is required</span>
               </div>
               <div>
                 <label for="store-name">Store Name</label>
-                <input type="text" id="store-name" name="store_name" placeholder="Public store name" required>
-                <span id="storeNameError" class="error-message">Store name is required.</span>
+                <input type="text" id="store-name" name="store_name" placeholder="Public store name" required />
+                <span id="storeNameError" class="error-message">Store name is required</span>
               </div>
               <div>
                 <label for="store-description">Store Description</label>
                 <textarea id="store-description" name="store_description" placeholder="Tell buyers what you sell" required></textarea>
-                <span id="descriptionError" class="error-message">Store description is required.</span>
+                <span id="descriptionError" class="error-message">Store description is required</span>
               </div>
               <p class="field-label">Product Categories</p>
               <div class="checkbox-grid">
-                <label><input type="checkbox" name="product_categories" value="fashion"> Fashion</label>
-                <label><input type="checkbox" name="product_categories" value="electronics"> Electronics</label>
-                <label><input type="checkbox" name="product_categories" value="home"> Home &amp; Kitchen</label>
-                <label><input type="checkbox" name="product_categories" value="beauty"> Beauty</label>
-                <label><input type="checkbox" name="product_categories" value="grocery"> Groceries</label>
-                <label><input type="checkbox" name="product_categories" value="services"> Services</label>
+                <label><input type="checkbox" name="product_categories" value="fashion" /> Fashion</label>
+                <label><input type="checkbox" name="product_categories" value="electronics" /> Electronics</label>
+                <label><input type="checkbox" name="product_categories" value="home" /> Home &amp; Kitchen</label>
+                <label><input type="checkbox" name="product_categories" value="beauty" /> Beauty</label>
+                <label><input type="checkbox" name="product_categories" value="grocery" /> Groceries</label>
+                <label><input type="checkbox" name="product_categories" value="services" /> Services</label>
               </div>
-              <span id="categoryError" class="error-message">Please select at least one category.</span>
-              <div>
-                <label for="fulfillment-method">Fulfillment Method</label>
-                <select id="fulfillment-method" name="fulfillment_method" required>
-                  <option value="">Select a method</option>
-                  <option value="delivery">Delivery only</option>
-                  <option value="pickup">Pickup only</option>
-                  <option value="both">Delivery and pickup</option>
-                </select>
-                <span id="fulfillmentError" class="error-message">Please select a fulfillment method.</span>
+              <span id="categoryError" class="error-message">Please select at least one category</span>
+              <div class="terms-block">
+                <label>
+                  <input type="checkbox" id="terms" required />
+                  I agree to the Terms, Privacy Policy, and Fees
+                </label>
               </div>
-            </div>
-
-            <div class="step-actions">
-              <button type="button" class="btn-secondary" data-prev>Back</button>
-              <button type="button" class="signup-btn" data-next>Next</button>
-            </div>
-          </div>
-
-          <!-- Step 3: Payout Details -->
-          <div class="form-step" data-step="3">
-            <div class="form-section">
-              <h3 class="section-title">Payout Details</h3>
-              <p class="step-note">The posted values are ready to use once the backend supports them.</p>
-
-              <div>
-                <label for="payout-method">Payout Method</label>
-                <select id="payout-method" name="payout_method" required>
-                  <option value="">Select a payout method</option>
-                  <option value="bank">Bank transfer</option>
-                  <option value="mobile-money">Mobile money</option>
-                </select>
-                <span id="payoutMethodError" class="error-message">Please select a payout method.</span>
-              </div>
-              <div>
-                <label for="payout-provider">Bank or Network</label>
-                <input type="text" id="payout-provider" name="payout_provider" placeholder="e.g. Ecobank / MTN" required>
-                <span id="payoutProviderError" class="error-message">Provider name is required.</span>
-              </div>
-              <div>
-                <label for="payout-name">Account Holder Name</label>
-                <input type="text" id="payout-name" name="payout_name" placeholder="Account holder name" required>
-                <span id="payoutNameError" class="error-message">Account holder name is required.</span>
-              </div>
-              <div>
-                <label for="payout-number">Account Number</label>
-                <input type="text" id="payout-number" name="payout_number" placeholder="Account number or mobile money" required>
-                <span id="payoutNumberError" class="error-message">Account number is required.</span>
-              </div>
-              <div>
-                <label for="verification">Verification (optional)</label>
-                <input type="file" id="verification" name="verification" class="file-input">
-              </div>
-            </div>
-
-            <div class="form-section">
-              <label><input type="checkbox" id="terms" required> I agree to the Terms, Privacy Policy, and Fees</label>
             </div>
 
             <div class="step-actions">
@@ -230,7 +160,10 @@
           </div>
         </form>
 
-        <p class="login-link">Already have an account? <a href="{% url 'accounts:login' %}">Log in</a></p>
+        <p class="login-link">
+          Already have an account?
+          <a href="{% url 'accounts:login' %}">Log in</a>
+        </p>
       </div>
     </div>
 
@@ -241,17 +174,16 @@
       const lastNameInput = document.getElementById("id_last_name");
       const fullNameMirror = document.getElementById("full-name");
 
-      function syncFullNameFields(fromCombinedField) {
+      function syncFullNameFields(fromCombined) {
         if (!firstNameInput || !lastNameInput || !fullNameMirror) return;
-        if (fromCombinedField) {
+        if (fromCombined) {
           const parts = fullNameMirror.value.trim().split(/\s+/).filter(Boolean);
           firstNameInput.value = parts[0] || "";
           lastNameInput.value = parts.slice(1).join(" ");
-          return;
+        } else {
+          fullNameMirror.value = [firstNameInput.value, lastNameInput.value].filter(Boolean).join(" ").trim();
         }
-        fullNameMirror.value = [firstNameInput.value, lastNameInput.value].filter(Boolean).join(" ").trim();
       }
-
       syncFullNameFields(false);
       fullNameMirror?.addEventListener("input", () => syncFullNameFields(true));
       firstNameInput?.addEventListener("input", () => syncFullNameFields(false));

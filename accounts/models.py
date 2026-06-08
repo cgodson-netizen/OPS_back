@@ -1,6 +1,10 @@
 # Create your models here.
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+import random
+import string
+from django.utils import timezone
+
 
 
 class CustomUserManager(BaseUserManager):
@@ -46,3 +50,26 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
 
     def get_full_name(self):
         return f'{self.first_name} {self.last_name}'
+
+
+class PasswordResetOTP(models.Model):
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.CASCADE,
+        related_name='password_reset_otps'
+    )
+    otp = models.CharField(max_length=4)
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_used = models.BooleanField(default=False)
+
+    def is_valid(self):
+        # OTP expires after 10 minutes
+        expiry = self.created_at + timezone.timedelta(minutes=10)
+        return not self.is_used and timezone.now() < expiry
+
+    @staticmethod
+    def generate_otp():
+        return ''.join(random.choices(string.digits, k=4))
+
+    def __str__(self):
+        return f"OTP for {self.user.email}"

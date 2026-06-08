@@ -63,19 +63,21 @@ body::after {
   );
 }
 
-#LogoText {
+.brand-logo {
   position: absolute;
-  top: 1.25rem;
+  top: 1.1rem;
   left: 1.25rem;
   z-index: 2;
-  margin: 0;
-  font-size: 1.5rem;
-  font-weight: 800;
-  letter-spacing: 0.06em;
-  color: transparent;
-  background: linear-gradient(90deg, #1e7f4f 0%, #3fbf7f 50%, #f2c94c 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
+  display: inline-flex;
+  align-items: center;
+  line-height: 0;
+  text-decoration: none;
+}
+
+.brand-logo-mark {
+  display: block;
+  height: 30px;
+  width: auto;
 }
 
 .container {
@@ -199,8 +201,8 @@ p {
 .progress-container {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: flex-start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  justify-items: center;
   gap: 18px;
   width: 100%;
   margin: 0 0 6px;
@@ -216,10 +218,13 @@ p {
   flex-direction: column;
   align-items: center;
   gap: 8px;
+  width: 100%;
   --segment-fill: 0%;
 }
 
 .step-label {
+  width: 100%;
+  text-align: center;
   font-size: 0.72rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -299,6 +304,10 @@ form {
   font-size: 0.95rem;
   font-weight: 600;
   color: var(--ops-text);
+}
+
+.terms-block {
+  margin-top: 18px;
 }
 
 label[for] {
@@ -555,11 +564,19 @@ a {
   gap: 14px;
 }
 
-:root[data-screen="phone"] #LogoText {
+:root[data-screen="tablet"] .brand-logo-mark {
+  height: 28px;
+}
+
+:root[data-screen="phone"] .brand-logo {
   position: static;
   display: block;
   text-align: center;
   padding-top: 24px;
+}
+
+:root[data-screen="phone"] .brand-logo-mark {
+  height: 26px;
 }
 
 :root[data-screen="phone"] .container {

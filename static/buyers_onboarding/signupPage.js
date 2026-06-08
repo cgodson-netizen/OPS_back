@@ -98,17 +98,14 @@ function validateStep(stepNumber) {
       setError(fullNameInput, fullNameError, "Full name is required.");
       hasError = true;
     }
-
     if (!validateEmail(email)) {
       setError(emailInput, emailError, "Please enter a valid email address.");
       hasError = true;
     }
-
     if (!validatePassword(password)) {
       setError(passwordInput, passwordError, "Use 6+ characters with upper, lower, number, and symbol.");
       hasError = true;
     }
-
     if (password !== confirmPassword) {
       setError(confirmPasswordInput, confirmPasswordError, "Passwords do not match.");
       hasError = true;
@@ -124,19 +121,14 @@ function validateStep(stepNumber) {
       setError(addressInput, addressError, "Delivery address is required.");
       hasError = true;
     }
-
     if (!city) {
       setError(cityInput, cityError, "City or region is required.");
       hasError = true;
     }
-
     if (!deliveryPreference) {
       setError(deliveryPreferenceSelect, deliveryError, "Please select a delivery preference.");
       hasError = true;
     }
-  }
-
-  if (stepNumber === 3) {
     if (termsCheckbox && !termsCheckbox.checked) {
       termsCheckbox.style.outline = "2px solid red";
       hasError = true;
@@ -174,7 +166,7 @@ form.addEventListener("submit", (event) => {
     return;
   }
 
-  // All steps valid — let Django handle real submission
+  // All valid — let Django handle real submission
   const submitButton = form.querySelector("button[type='submit']");
   if (submitButton) {
     submitButton.disabled = true;
@@ -190,10 +182,9 @@ if (togglePassword) {
     if (!field) return;
     const type = field.getAttribute("type") === "password" ? "text" : "password";
     field.setAttribute("type", type);
-    togglePassword.src =
-      type === "password"
-        ? togglePassword.dataset.hiddenIcon
-        : togglePassword.dataset.visibleIcon;
+    togglePassword.src = type === "password"
+      ? togglePassword.dataset.hiddenIcon
+      : togglePassword.dataset.visibleIcon;
   });
 }
 
@@ -203,10 +194,9 @@ if (toggleConfirmPassword) {
     if (!field) return;
     const type = field.getAttribute("type") === "password" ? "text" : "password";
     field.setAttribute("type", type);
-    toggleConfirmPassword.src =
-      type === "password"
-        ? toggleConfirmPassword.dataset.hiddenIcon
-        : toggleConfirmPassword.dataset.visibleIcon;
+    toggleConfirmPassword.src = type === "password"
+      ? toggleConfirmPassword.dataset.hiddenIcon
+      : toggleConfirmPassword.dataset.visibleIcon;
   });
 }
 
@@ -220,5 +210,4 @@ function syncName() {
   firstNameInput.value = parts[0] || "";
   lastNameInput.value = parts.slice(1).join(" ") || "";
 }
-
 if (fullNameInput) fullNameInput.addEventListener("input", syncName);

@@ -8,42 +8,42 @@
     <link rel="stylesheet" href="{% static 'landingPage.css' %}">
 </head>
 <body>
-    <div class="background">
-        <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
-        <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
-        <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
-    </div>
-    <div class="overlay"></div>
 
-    <header class="navbar">
-        <div class="logo">OPS</div>
-        <nav>
-            <button type="button" id="login-btn" class="btn-login"
-                onclick="window.location.href='{% url 'accounts:login' %}'">
-                Login
+<div class="background">
+    <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
+    <img class="bg-slide" src="{% static 'Images/Screenshot 2026-03-16 at 14.07.02.png' %}" alt="" aria-hidden="true">
+    <img class="bg-slide" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true">
+</div>
+<div class="overlay"></div>
+
+<header class="navbar">
+    <a class="logo" href="{% url 'accounts:homepage' %}" aria-label="OPS home">
+        <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="logo-mark">
+    </a>
+    <nav>
+        <button type="button" id="login-btn" class="btn-login">Login</button>
+        <div class="dropdown">
+            <button class="btn-primary" id="registerBtn">
+                Register
             </button>
-            <div class="dropdown">
-                <button class="btn-primary" id="registerBtn">
-                    Register
-                </button>
-                <div class="dropdown-menu" id="dropdownMenu">
-                    <a href="{% url 'accounts:register_buyer' %}">Become a Buyer</a>
-                    <a href="{% url 'accounts:register_seller' %}">Become a Seller</a>
-                </div>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <a href="{% url 'accounts:register_buyer' %}">Become a Buyer</a>
+                <a href="{% url 'accounts:register_seller' %}">Become a Seller</a>
             </div>
-        </nav>
-    </header>
-
-    <section class="hero">
-        <h1>Buy and Sell with Confidence</h1>
-        <p>Structured transactions for everyday traders in Ghana.</p>
-        <div class="cta">
-            <a class="primary" href="{% url 'accounts:register_buyer' %}">Start Buying</a>
-            <a class="secondary" href="{% url 'accounts:register_seller' %}">Start Selling</a>
         </div>
-    </section>
+    </nav>
+</header>
 
-    <script src="{% static 'media.js' %}"></script>
-    <script src="{% static 'landingPage.js' %}"></script>
+<section class="hero">
+    <h1>Buy and Sell with Confidence</h1>
+    <p>Structured transactions for everyday traders in Ghana.</p>
+    <div class="cta">
+        <a class="primary" href="{% url 'accounts:register_buyer' %}">Start Buying</a>
+        <a class="secondary" href="{% url 'accounts:register_seller' %}">Start Selling</a>
+    </div>
+</section>
+
+<script src="{% static 'media.js' %}"></script>
+<script src="{% static 'landingPage.js' %}"></script>
 </body>
 </html>

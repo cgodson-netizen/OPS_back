@@ -58,6 +58,7 @@ z-index:-1;
 .navbar{
 display:flex;
 justify-content:space-between;
+align-items:center;
 padding:20px 60px;
 position:fixed;
 width:100%;
@@ -65,8 +66,17 @@ z-index:10;
 }
 
 .logo{
-font-weight:800;
-letter-spacing:0.08em;
+display:inline-flex;
+align-items:center;
+line-height:0;
+text-decoration:none;
+flex:0 0 auto;
+}
+
+.logo-mark{
+display:block;
+height:30px;
+width:auto;
 }
 
 .navbar nav{
@@ -75,6 +85,20 @@ align-items:center;
 gap:14px;
 flex-wrap:nowrap;
 white-space:nowrap;
+}
+
+.cta{
+display:grid;
+grid-template-columns:repeat(2, minmax(0, 1fr));
+gap:12px;
+width:min(100%, 420px);
+margin:0 auto;
+}
+
+.cta a{
+width:100%;
+text-align:center;
+margin-right:0;
 }
 
 /* HERO */
@@ -127,24 +151,25 @@ animation:none;
 .primary{
 background:#1e7f4f;
 border:none;
-padding:14px 28px;
+padding:12px 22px;
 color:white;
 border-radius:50px;
-margin-right:10px;
 text-decoration:none;
 display:inline-block;
 font-weight:600;
+font-size:0.95rem;
 }
 
 .secondary{
 background:#ffffff33;
 border:none;
-padding:14px 28px;
+padding:12px 22px;
 color:white;
 border-radius:50px;
 text-decoration:none;
 display:inline-block;
 font-weight:500;
+font-size:0.95rem;
 }
 
 /* OTHER SECTIONS */
@@ -159,21 +184,23 @@ text-align:center;
 .btn-primary{
     background:#1e7f4f;
 border:none;
-padding:14px 28px;
+padding:12px 22px;
 color:white;
 border-radius:50px;
-margin-right:10px;
 font-weight:700;
+font-size:0.95rem;
 }
 
 .btn-login{
 background:transparent;
 border:1px solid rgba(255,255,255,0.75);
-padding:12px 26px;
+padding:11px 20px;
 color:white;
 border-radius:50px;
 cursor:pointer;
 font-weight:500;
+font-size:0.95rem;
+margin-top:0;
 }
 
 .btn-login:hover{
@@ -182,8 +209,7 @@ background:rgba(255,255,255,0.12);
 
 .dropdown {
     position: relative;
-    margin-right: 110px;
-    margin-top: 20px;
+    margin: 0;
 }
 
 /* MENU */
@@ -233,16 +259,21 @@ background:rgba(255,255,255,0.12);
 #login-btn {
     background: #1e7f4f;
     border: none;
-    padding: 14px 28px;
+    padding: 11px 20px;
     color: white;
     border-radius: 50px;
-    margin-right: 10px;
-    margin-top: 20px;
+    margin-top: 0;
     font-weight: 600;
+    font-size: 0.95rem;
 }
 
 :root[data-screen="tablet"] .navbar {
     padding: 20px 32px;
+    align-items: center;
+}
+
+:root[data-screen="tablet"] .logo-mark {
+    height: 28px;
 }
 
 :root[data-screen="tablet"] .hero h1 {
@@ -254,36 +285,36 @@ background:rgba(255,255,255,0.12);
 }
 
 :root[data-screen="tablet"] .cta {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 12px;
+    width: min(100%, 460px);
 }
 
 :root[data-screen="tablet"] .primary,
 :root[data-screen="tablet"] .secondary,
 :root[data-screen="tablet"] .btn-primary,
 :root[data-screen="tablet"] .btn-login {
-    padding: 12px 24px;
+    padding: 11px 20px;
 }
 
 :root[data-screen="phone"] .navbar {
     padding: 16px 20px;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row;
+    align-items: center;
     gap: 12px;
 }
 
+:root[data-screen="phone"] .logo-mark {
+    height: 26px;
+}
+
 :root[data-screen="phone"] .navbar nav {
-    width: 100%;
+    width: auto;
     justify-content: flex-end;
     flex-wrap: wrap;
     gap: 10px;
 }
 
 :root[data-screen="phone"] .dropdown {
-    margin-right: 0;
-    margin-top: 0;
+    margin: 0;
 }
 
 :root[data-screen="phone"] .hero {
@@ -300,16 +331,13 @@ background:rgba(255,255,255,0.12);
 }
 
 :root[data-screen="phone"] .cta {
-    display: flex;
-    flex-direction: column;
+    width: min(100%, 380px);
     gap: 12px;
-    width: 100%;
-    align-items: center;
 }
 
 :root[data-screen="phone"] .primary,
 :root[data-screen="phone"] .secondary,
 :root[data-screen="phone"] .btn-primary,
 :root[data-screen="phone"] .btn-login {
-    padding: 12px 22px;
+    padding: 10px 18px;
 }

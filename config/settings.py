@@ -157,3 +157,18 @@ if not DEBUG:
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
 CSRF_TRUSTED_ORIGINS = ['https://ops-marketplace.onrender.com'] 
+
+# Email configuration
+if DEBUG:
+    # Local development — print emails to terminal
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+else:
+    # Production — send real emails via Gmail
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_PORT = 465
+    EMAIL_USE_SSL = True
+    EMAIL_USE_TLS = False
+    EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+    EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+    DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')

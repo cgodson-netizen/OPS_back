@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Verify OTP</title>
+    <link rel="stylesheet" href="verifyOtp.css" />
+  </head>
+  <body>
+    <h1 id="LogoText">OPS</h1>
+
+    <main class="verify-shell">
+      <section class="verify-card" aria-labelledby="verify-title">
+        <div class="verify-badge" aria-hidden="true">
+          <svg viewBox="0 0 24 24" role="presentation">
+            <path
+              d="M12 3 6.75 5.15v5.54c0 3.53 2.15 6.74 5.25 8.12 3.1-1.38 5.25-4.59 5.25-8.12V5.15Z"
+              fill="none"
+              stroke="currentColor"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+            />
+            <path
+              d="m9.4 11.9 1.7 1.7 3.5-3.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1.8"
+            />
+          </svg>
+        </div>
+
+        <h2 id="verify-title">Enter Verification Code</h2>
+        <p class="subtitle">
+          We&apos;ve sent a 4-digit code to
+          <span id="delivery-target">your recovery contact</span>.
+        </p>
+
+        <form id="verify-form" novalidate>
+          <div class="otp-grid" id="otp-grid">
+            <input
+              class="otp-input"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              maxlength="1"
+              aria-label="Digit 1"
+              autocomplete="one-time-code"
+            />
+            <input
+              class="otp-input"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              maxlength="1"
+              aria-label="Digit 2"
+            />
+            <input
+              class="otp-input"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              maxlength="1"
+              aria-label="Digit 3"
+            />
+            <input
+              class="otp-input"
+              type="text"
+              inputmode="numeric"
+              pattern="[0-9]*"
+              maxlength="1"
+              aria-label="Digit 4"
+            />
+          </div>
+
+          <p id="otpError" class="error-message">
+            Enter the full 4-digit verification code.
+          </p>
+
+          <div class="resend-row">
+            <span>Didn&apos;t get a code?</span>
+            <button type="button" class="text-action" id="resend-code">
+              Click to resend.
+            </button>
+            <span class="timer" id="resend-timer" aria-live="polite">
+              Available in 30s
+            </span>
+          </div>
+
+          <p class="resend-feedback" id="resend-feedback" aria-live="polite"></p>
+
+          <div class="divider" aria-hidden="true"></div>
+
+          <div class="action-row">
+            <a class="ghost-btn" href="../passwordReset.html">Cancel</a>
+            <button type="submit" class="primary-btn" id="verify-button">
+              Verify
+            </button>
+          </div>
+
+          <p class="status-message" id="status-message" aria-live="polite"></p>
+        </form>
+      </section>
+    </main>
+
+    <script src="../../../media.js"></script>
+    <script src="verifyOtp.js"></script>
+  </body>
+</html>
