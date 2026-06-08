@@ -62,7 +62,6 @@ def user_logout(request):
     return redirect('accounts:login')
 
 
-
 @login_required
 def role_redirect(request):
     if request.user.role == 'seller':
@@ -75,34 +74,69 @@ def role_redirect(request):
 
 @login_required
 def seller_dashboard(request):
-    from .decorators import seller_required
     if request.user.role != 'seller':
         return redirect('accounts:role_redirect')
-    return render(request, 'accounts/seller_dashboard.html')
+    from products.models import Product
+    from orders.models import Order, OrderItem
+    from django.db.models import Sum, F
+
+    products = Product.objects.filter(seller=request.user).order_by('-created_at')
+    total_products = products.count()
+    active_products = products.filter(is_active=True).count()
+    total_orders = Order.objects.filter(
+        items__product__seller=request.user
+    ).distinct().count()
+    total_revenue = OrderItem.objects.filter(
+        product__seller=request.user,
+        order__status__in=['confirmed', 'shipped', 'delivered']
+    ).aggregate(revenue=Sum(F('unit_price') * F('quantity')))['revenue'] or 0
+    recent_orders = Order.objects.filter(
+        items__product__seller=request.user
+    ).distinct().order_by('-created_at')[:5]
+
+    return render(request, 'accounts/seller_dashboard.html', {
+        'products': products,
+        'total_products': total_products,
+        'active_products': active_products,
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'recent_orders': recent_orders,
+    })
 
 
 @login_required
 def buyer_dashboard(request):
     if request.user.role != 'buyer':
         return redirect('accounts:role_redirect')
-    return render(request, 'accounts/buyer_dashboard.html')
-
+    from products.models import Product, Category
+    from orders.models import Cart
+    products = Product.objects.filter(is_active=True, stock__gt=0).order_by('-created_at')
+    categories = Category.objects.all()
+    cart_count = 0
+    try:
+        cart = Cart.objects.get(buyer=request.user)
+        cart_count = cart.items.count()
+    except Cart.DoesNotExist:
+        pass
+    return render(request, 'accounts/buyer_dashboard.html', {
+        'products': products,
+        'categories': categories,
+        'cart_count': cart_count,
+    })
 
 def homepage(request):
     if request.user.is_authenticated:
         return redirect('accounts:role_redirect')
     return render(request, 'homepage.html')
 
+
 def password_reset_request(request):
     if request.method == 'POST':
         email = request.POST.get('email', '').strip()
         try:
             user = CustomUser.objects.get(email=email)
-            # Generate OTP
             otp = PasswordResetOTP.generate_otp()
             PasswordResetOTP.objects.create(user=user, otp=otp)
-
-            # Send email
             send_mail(
                 subject='OPS Marketplace — Password Reset OTP',
                 message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.',
@@ -110,12 +144,9 @@ def password_reset_request(request):
                 recipient_list=[email],
                 fail_silently=False,
             )
-
-            # Store email in session for OTP verification step
             request.session['reset_email'] = email
             return redirect('accounts:verify_otp')
         except CustomUser.DoesNotExist:
-            # Don't reveal if email exists or not
             request.session['reset_email'] = email
             return redirect('accounts:verify_otp')
 
@@ -139,9 +170,7 @@ def verify_otp(request):
         try:
             user = CustomUser.objects.get(email=email)
             otp_record = PasswordResetOTP.objects.filter(
-                user=user,
-                otp=otp,
-                is_used=False
+                user=user, otp=otp, is_used=False
             ).last()
 
             if otp_record and otp_record.is_valid():
@@ -187,11 +216,8 @@ def set_new_password(request):
             user = CustomUser.objects.get(email=email)
             user.set_password(password1)
             user.save()
-
-            # Clear session
             del request.session['reset_email']
             del request.session['reset_verified']
-
             return redirect('accounts:login')
         except CustomUser.DoesNotExist:
             return redirect('accounts:password_reset_request')

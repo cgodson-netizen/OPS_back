@@ -1,39 +1,111 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>My Cart</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:product_list' %}">Browse Products</a> |
-        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
-        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | My Cart</title>
+    <link rel="stylesheet" href="{% static 'buyers_dashboard/buyersDashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'buyers_dashboard/My Cart/my_cart.css' %}" />
+  </head>
+  <body>
+    <header class="topbar cart-topbar">
+      <a class="brand-lockup" href="{% url 'accounts:buyer_dashboard' %}">
+        <img class="brand-mark" src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" />
+      </a>
+      <nav class="topnav" aria-label="Buyer dashboard navigation">
+        <a class="nav-link" href="{% url 'accounts:buyer_dashboard' %}">Browse Products</a>
+        <a class="nav-link is-active" href="{% url 'orders:cart_detail' %}" aria-current="page">My Cart</a>
+        <a class="nav-link" href="{% url 'orders:buyer_order_list' %}">My Orders</a>
+      </nav>
+      <div class="topbar-actions">
+        <a class="button button-secondary" href="{% url 'accounts:buyer_dashboard' %}">Continue shopping</a>
+        <a class="button button-primary" href="{% url 'orders:checkout' %}" id="checkout-link">Proceed to checkout</a>
+        <a class="avatar-chip" href="{% url 'accounts:logout' %}" aria-label="Logout">
+          {{ request.user.first_name|slice:":1"|upper }}{{ request.user.last_name|slice:":1"|upper }}
+        </a>
+      </div>
+    </header>
 
-    <h2>My Cart</h2>
-    {% if cart.items.all %}
-        {% for item in cart.items.all %}
-        <div>
-            <p>
-                <a href="{% url 'products:product_detail' item.product.slug %}">{{ item.product.name }}</a>
-                — GHS {{ item.product.price }} x {{ item.quantity }}
-                = GHS {{ item.get_subtotal }}
-            </p>
-            <form method="post" action="{% url 'orders:cart_update' item.id %}">
-                {% csrf_token %}
-                <input type="number" name="quantity" value="{{ item.quantity }}" min="1">
-                <button type="submit">Update</button>
-            </form>
-            <a href="{% url 'orders:cart_remove' item.id %}">Remove</a>
+    <main class="cart-main">
+      <section class="panel cart-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">My cart</p>
+            <h3>Items ready for checkout</h3>
+          </div>
+          <span class="status-chip status-chip--neutral" id="cart-count">
+            {{ cart.items.count }} item{{ cart.items.count|pluralize }}
+          </span>
         </div>
-        <hr>
-        {% endfor %}
-        <h3>Total: GHS {{ cart.get_total }}</h3>
-        <a href="{% url 'orders:checkout' %}">Proceed to Checkout →</a>
-    {% else %}
-        <p>Your cart is empty.</p>
-        <a href="{% url 'products:product_list' %}">Start Shopping</a>
-    {% endif %}
-</body>
+
+        <div class="summary-grid" id="cart-summary"></div>
+
+        <div class="table-wrap">
+          <table class="buyer-table cart-table">
+            <thead>
+              <tr>
+                <th scope="col">Product</th>
+                <th scope="col">Qty</th>
+                <th scope="col">Price</th>
+                <th scope="col">Subtotal</th>
+                <th scope="col">Action</th>
+              </tr>
+            </thead>
+            <tbody id="cart-body">
+              {% for item in cart.items.all %}
+              <tr data-item-id="{{ item.id }}"
+                  data-product-name="{{ item.product.name }}"
+                  data-price="{{ item.product.price }}"
+                  data-quantity="{{ item.quantity }}"
+                  data-subtotal="{{ item.get_subtotal }}">
+                <td>
+                  <div class="table-product">
+                    <div class="table-name">
+                      <strong>{{ item.product.name }}</strong>
+                      <span>{{ item.product.category.name }}</span>
+                    </div>
+                  </div>
+                </td>
+                <td>
+                  <div class="cart-quantity-control">
+                    <button class="cart-quantity-button" type="button"
+                      data-cart-action="decrease">−</button>
+                    <input class="cart-quantity-input" type="number"
+                      min="1" value="{{ item.quantity }}" />
+                    <button class="cart-quantity-button" type="button"
+                      data-cart-action="increase">+</button>
+                  </div>
+                </td>
+                <td class="table-price">GHS {{ item.product.price }}</td>
+                <td class="table-amount">GHS {{ item.get_subtotal }}</td>
+                <td>
+                  <button class="cart-remove-link" type="button"
+                    data-cart-action="remove" data-item-id="{{ item.id }}">
+                    Remove
+                  </button>
+                </td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5">
+                  <div class="cart-empty">
+                    <strong>Your cart is empty</strong>
+                    <p>Add products from the catalog to start your order.</p>
+                    <a class="button button-primary" href="{% url 'accounts:buyer_dashboard' %}">
+                      Start shopping
+                    </a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'buyers_dashboard/My Cart/my_cart.js' %}"></script>
+  </body>
 </html>

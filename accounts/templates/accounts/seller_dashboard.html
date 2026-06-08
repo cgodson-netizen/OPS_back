@@ -1,23 +1,212 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>Seller Dashboard</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
-        <a href="{% url 'products:product_create' %}">Add Product</a> |
-        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
-        <a href="{% url 'analytics:seller_analytics' %}">Analytics</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
-    <h2>Welcome, {{ request.user.get_full_name }}</h2>
-    <p>What would you like to do today?</p>
-    <ul>
-        <li><a href="{% url 'products:seller_product_list' %}">Manage My Products</a></li>
-        <li><a href="{% url 'products:product_create' %}">Add New Product</a></li>
-        <li><a href="{% url 'orders:seller_order_list' %}">View Incoming Orders</a></li>
-        <li><a href="{% url 'analytics:seller_analytics' %}">View My Analytics</a></li>
-    </ul>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Seller Dashboard</title>
+    <link rel="stylesheet" href="{% static 'sellers_dashboard/sellersDashboard.css' %}" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <button class="sidebar-toggle" id="sidebar-toggle" type="button"
+        aria-controls="seller-sidebar" aria-expanded="false" aria-label="Open navigation">
+        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+        </svg>
+      </button>
+
+      <aside class="sidebar" id="seller-sidebar">
+        <div class="brand-block">
+          <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="brand-mark" />
+          <div class="brand-copy-block">
+            <h1 class="brand-title">Dashboard</h1>
+          </div>
+        </div>
+
+        <nav class="sidebar-nav" aria-label="Seller dashboard navigation">
+          <a class="nav-link is-active" href="#overview" data-route="overview" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M4 10.5 12 4l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" />
+                <path d="M9.5 20v-5h5v5" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>Overview</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:seller_product_list' %}" data-route="products:seller_product_list">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+                <path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>My Products</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:product_create' %}" data-route="products:product_create">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>Add Product</span>
+          </a>
+          <a class="nav-link" href="{% url 'orders:seller_order_list' %}" data-route="orders:seller_order_list">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M4 6.5h16M7 3.5v3M17 3.5v3M6.5 20h11A2.5 2.5 0 0 0 20 17.5v-8A2.5 2.5 0 0 0 17.5 7h-11A2.5 2.5 0 0 0 4 9.5v8A2.5 2.5 0 0 0 6.5 20Z"
+                  fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>Incoming Orders</span>
+          </a>
+          <a class="nav-link" href="{% url 'analytics:seller_analytics' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M4 20h16M7 20v-6m4 6v-10m4 10v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>Analytics</span>
+          </a>
+        </nav>
+
+        <div class="sidebar-footer">
+          <p class="sidebar-footer-copy">OPS Marketplace</p>
+          <a class="logout-link" href="{% url 'accounts:logout' %}" id="sidebar-logout-link">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" role="presentation">
+                <path d="M10 7V5.5A2.5 2.5 0 0 1 12.5 3h5A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-5A2.5 2.5 0 0 1 10 18.5V17"
+                  fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8" />
+                <path d="M3 12h11M7 8l-4 4 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+              </svg>
+            </span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+      <main class="dashboard-main" id="overview" data-view="overview">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <h2 id="greeting-title">Welcome, {{ request.user.get_full_name }}.</h2>
+            <p class="topbar-text">
+              <span id="seller-name">{{ request.user.get_full_name }}</span>
+              <span id="topbar-snapshot"> — a quick snapshot of your store performance, stock, and active orders.</span>
+            </p>
+            <div class="topbar-actions">
+              <a class="button button-primary" href="{% url 'products:product_create' %}">Add Product</a>
+              <a class="button button-secondary" href="{% url 'orders:seller_order_list' %}">Incoming Orders</a>
+            </div>
+          </div>
+          <div class="topbar-meta">
+            <div class="date-chip" id="current-date"></div>
+          </div>
+        </header>
+
+        <!-- Metrics -->
+        <section class="metric-grid" id="metric-grid" aria-label="Dashboard metrics">
+          <article class="metric-card">
+            <p class="metric-label">Total Products</p>
+            <strong class="metric-value">{{ total_products }}</strong>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Active Listings</p>
+            <strong class="metric-value">{{ active_products }}</strong>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Total Orders</p>
+            <strong class="metric-value">{{ total_orders }}</strong>
+          </article>
+          <article class="metric-card">
+            <p class="metric-label">Total Revenue</p>
+            <strong class="metric-value">GHS {{ total_revenue }}</strong>
+          </article>
+        </section>
+
+        <section class="content-grid">
+          <!-- Products Panel -->
+          <article class="panel products-panel" id="products-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">My products</p>
+                <h3>Manage your listings</h3>
+              </div>
+              <a class="panel-link" href="{% url 'products:product_create' %}">+ Add New Product</a>
+            </div>
+            <div class="product-list" id="product-list">
+              {% for product in products %}
+              <div class="product-row">
+                <div class="product-row-info">
+                  <strong>{{ product.name }}</strong>
+                  <span>GHS {{ product.price }} &bull; Stock: {{ product.stock }} &bull; {% if product.is_active %}Active{% else %}Inactive{% endif %}</span>
+                </div>
+                <div class="product-row-actions">
+                  <a href="{% url 'products:product_edit' product.pk %}">Edit</a>
+                  <a href="{% url 'products:product_toggle_active' product.pk %}">Toggle</a>
+                  <a href="{% url 'products:product_delete' product.pk %}">Delete</a>
+                </div>
+              </div>
+              {% empty %}
+              <p class="empty-state">No products yet. <a href="{% url 'products:product_create' %}">Add your first product</a></p>
+              {% endfor %}
+            </div>
+          </article>
+
+          <!-- Orders Panel -->
+          <article class="panel orders-panel" id="orders-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Incoming orders</p>
+                <h3>Recent requests</h3>
+              </div>
+              <a class="panel-link" href="{% url 'orders:seller_order_list' %}">Open orders</a>
+            </div>
+            <div class="orders-preview-list" id="orders-preview-list">
+              {% for order in recent_orders %}
+              <div class="order-row">
+                <div class="order-row-info">
+                  <strong>Order #{{ order.id }}</strong>
+                  <span>{{ order.get_status_display }} &bull; GHS {{ order.total_amount }} &bull; {{ order.created_at|date:"d M Y" }}</span>
+                </div>
+                <a href="{% url 'orders:seller_order_detail' order.pk %}" class="panel-link">View</a>
+              </div>
+              {% empty %}
+              <p class="empty-state">No orders yet.</p>
+              {% endfor %}
+            </div>
+          </article>
+
+          <!-- Tasks Panel -->
+          <article class="panel tasks-panel" id="tasks-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Quick actions</p>
+                <h3>What to do next</h3>
+              </div>
+            </div>
+            <div class="task-list" id="task-list">
+              <a class="task-item" href="{% url 'products:product_create' %}">+ Add a new product</a>
+              <a class="task-item" href="{% url 'orders:seller_order_list' %}">View all incoming orders</a>
+              <a class="task-item" href="{% url 'analytics:seller_analytics' %}">View sales analytics</a>
+              <a class="task-item" href="{% url 'products:seller_product_list' %}">Manage product listings</a>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'sellers_dashboard/sellersDasboard.js' %}"></script>
+    <script>
+      // Set current date
+      const dateEl = document.getElementById("current-date");
+      if (dateEl) {
+        dateEl.textContent = new Date().toLocaleDateString("en-GB", {
+          weekday: "long", year: "numeric", month: "long", day: "numeric"
+        });
+      }
+    </script>
+  </body>
 </html>

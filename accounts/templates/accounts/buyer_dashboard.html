@@ -1,21 +1,181 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>Buyer Dashboard</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:product_list' %}">Browse Products</a> |
-        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
-        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
-    <h2>Welcome, {{ request.user.get_full_name }}</h2>
-    <p>What would you like to do today?</p>
-    <ul>
-        <li><a href="{% url 'products:product_list' %}">Browse Products</a></li>
-        <li><a href="{% url 'orders:cart_detail' %}">View My Cart</a></li>
-        <li><a href="{% url 'orders:buyer_order_list' %}">View My Orders</a></li>
-    </ul>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Buyer Dashboard</title>
+    <link rel="stylesheet" href="{% static 'buyers_dashboard/buyersDashboard.css' %}" />
+  </head>
+  <body>
+    <header class="topbar">
+      <button class="nav-toggle" id="buyer-nav-toggle" type="button"
+        aria-controls="buyer-topnav" aria-expanded="false" aria-label="Open navigation">
+        <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+          <path d="M4 7h16M4 12h16M4 17h16" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+        </svg>
+      </button>
+
+      <a class="brand-lockup" href="{% url 'accounts:buyer_dashboard' %}">
+        <img class="brand-mark" src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" />
+      </a>
+
+      <nav class="topnav" id="buyer-topnav" aria-label="Buyer dashboard navigation">
+        <a class="nav-link is-active" href="{% url 'accounts:buyer_dashboard' %}" aria-current="page">Browse Products</a>
+        <a class="nav-link" href="{% url 'orders:cart_detail' %}">My Cart</a>
+        <a class="nav-link" href="{% url 'orders:buyer_order_list' %}">My Orders</a>
+      </nav>
+
+      <div class="topbar-actions">
+        <button class="icon-button" id="search-shortcut" type="button" aria-label="Search products">
+          <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.8" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <path d="m16.5 16.5 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8" />
+          </svg>
+        </button>
+
+        <a class="icon-button icon-button--cart" href="{% url 'orders:cart_detail' %}" aria-label="My cart">
+          <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+            <path d="M6 7h15l-1.7 7.2a2 2 0 0 1-2 1.6H9.2a2 2 0 0 1-2-1.5L5.3 4.8H2"
+              fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" />
+            <circle cx="10" cy="19" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6" />
+            <circle cx="17" cy="19" r="1.4" fill="none" stroke="currentColor" stroke-width="1.6" />
+          </svg>
+          <span class="cart-badge" id="cart-badge" {% if cart_count == 0 %}hidden{% endif %}>{{ cart_count }}</span>
+        </a>
+
+        <a class="avatar-chip" href="{% url 'accounts:logout' %}" aria-label="Logout">
+          {{ request.user.first_name|slice:":1"|upper }}{{ request.user.last_name|slice:":1"|upper }}
+        </a>
+      </div>
+    </header>
+    <div class="nav-backdrop" id="buyer-nav-backdrop" aria-hidden="true"></div>
+
+    <main class="dashboard-main" id="dashboard-main" data-view="overview">
+      <section class="overview-section" id="overview-section">
+        <article class="hero-section" aria-label="Featured shopping area">
+          <div class="hero-stage">
+            <img class="hero-image" src="{% static 'Images/seamstress.png' %}" alt="" aria-hidden="true" />
+            <div class="hero-stage-overlay" aria-hidden="true"></div>
+          </div>
+
+          <div class="hero-slab">
+            <div class="hero-copy">
+              <p class="hero-kicker" id="hero-greeting" data-name="{{ request.user.first_name }}">
+                Welcome back, {{ request.user.first_name }}.
+              </p>
+              <h1 id="hero-title">Get All You Need</h1>
+              <p class="hero-text" id="hero-text">
+                Search the latest drops and keep tabs on your cart from one clean place.
+              </p>
+            </div>
+
+            <form class="hero-search" id="product-search-form" method="get" action="{% url 'accounts:buyer_dashboard' %}">
+              <label class="search-field" for="product-search">
+                <svg viewBox="0 0 24 24" role="presentation" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6.8" fill="none" stroke="currentColor" stroke-width="1.6" />
+                  <path d="m16.5 16.5 3.9 3.9" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.6" />
+                </svg>
+                <input id="product-search" name="search" type="search"
+                  placeholder="Search on OPS" autocomplete="off"
+                  value="{{ request.GET.search|default:'' }}" />
+              </label>
+              <button class="search-button" type="submit">Search</button>
+            </form>
+          </div>
+        </article>
+
+        <section class="shop-layout" aria-label="Product discovery section">
+          <aside class="filters-panel" aria-label="Product filters">
+            <article class="sidebar-card">
+              <p class="sidebar-kicker">Category</p>
+              <h2>Browse by type</h2>
+              <div class="filter-list" id="category-list">
+                <!-- Populated by JS from product data attributes -->
+              </div>
+            </article>
+
+            <article class="sidebar-card">
+              <p class="sidebar-kicker">Quick Links</p>
+              <div class="filter-list filter-list--stacked">
+                <a href="{% url 'orders:cart_detail' %}">My Cart</a>
+                <a href="{% url 'orders:buyer_order_list' %}">My Orders</a>
+              </div>
+            </article>
+
+            <a class="sidebar-action sidebar-action--logout" href="{% url 'accounts:logout' %}">Logout</a>
+          </aside>
+
+          <section class="catalog-panel">
+            <div class="catalog-head">
+              <div>
+                <p class="catalog-kicker">New drops</p>
+                <h3>Fresh picks for your feed</h3>
+              </div>
+              <p class="catalog-summary" id="catalog-summary">
+                {{ products|length }} product{{ products|length|pluralize }} available
+              </p>
+            </div>
+
+            <section class="product-grid" id="product-grid" aria-label="Featured products">
+              {% for product in products %}
+              <article class="product-card"
+                data-product-id="{{ product.id }}"
+                data-product-name="{{ product.name }}"
+                data-category-slug="{{ product.category.slug|default:'general' }}"
+                data-category-label="{{ product.category.name|default:'General' }}"
+                data-price="{{ product.price }}"
+                data-stock="{{ product.stock }}"
+                data-image="{% if product.image %}{{ product.image.url }}{% endif %}"
+                data-slug="{{ product.slug }}">
+                <div class="product-media">
+                  {% if product.image %}
+                  <img src="{{ product.image.url }}" alt="{{ product.name }}" />
+                  {% else %}
+                  <div class="product-image--placeholder"></div>
+                  {% endif %}
+                  <span class="product-category">{{ product.category.name }}</span>
+                </div>
+                <div class="product-body">
+                  <h4 class="product-title">{{ product.name }}</h4>
+                  <p class="product-description">{{ product.description|truncatewords:12 }}</p>
+                  <div class="product-meta-row">
+                    <span class="product-price">GHS {{ product.price }}</span>
+                    <span class="product-stock">{{ product.stock }} left</span>
+                  </div>
+                  <div class="product-actions">
+                    <button class="product-action" type="button"
+                      data-product-action="add" data-product-id="{{ product.id }}">
+                      Add to Cart
+                    </button>
+                    <a class="product-action product-action--primary"
+                      href="{% url 'products:product_detail' product.slug %}">
+                      View
+                    </a>
+                    <button class="product-action product-action--primary" type="button"
+                      data-product-action="buy" data-product-id="{{ product.id }}">
+                      Buy Now
+                    </button>
+                  </div>
+                </div>
+              </article>
+              {% empty %}
+              <div class="empty-state" style="grid-column: 1 / -1;">
+                <strong>No products available yet.</strong>
+                <span>Check back soon for new listings.</span>
+              </div>
+              {% endfor %}
+            </section>
+
+            <nav class="pager" id="product-pager" aria-label="Products pagination"></nav>
+          </section>
+        </section>
+      </section>
+    </main>
+
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'buyers_dashboard/buyersDashboard.js' %}"></script>
+  </body>
 </html>
+
+

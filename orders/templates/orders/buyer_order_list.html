@@ -1,30 +1,92 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>My Orders</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:product_list' %}">Browse Products</a> |
-        <a href="{% url 'orders:cart_detail' %}">My Cart</a> |
-        <a href="{% url 'orders:buyer_order_list' %}">My Orders</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | My Orders</title>
+    <link rel="stylesheet" href="{% static 'buyers_dashboard/buyersDashboard.css' %}" />
+    <link rel="stylesheet" href="{% static 'buyers_dashboard/my Orders/my_orders.css' %}" />
+  </head>
+  <body>
+    <header class="topbar orders-topbar">
+      <a class="brand-lockup" href="{% url 'accounts:buyer_dashboard' %}">
+        <img class="brand-mark" src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" />
+      </a>
+      <nav class="topnav" aria-label="Buyer dashboard navigation">
+        <a class="nav-link" href="{% url 'accounts:buyer_dashboard' %}">Browse Products</a>
+        <a class="nav-link" href="{% url 'orders:cart_detail' %}">My Cart</a>
+        <a class="nav-link is-active" href="{% url 'orders:buyer_order_list' %}" aria-current="page">My Orders</a>
+      </nav>
+      <div class="topbar-actions">
+        <a class="button button-secondary" href="{% url 'accounts:buyer_dashboard' %}">Continue shopping</a>
+        <a class="button button-primary" href="{% url 'orders:cart_detail' %}">View cart</a>
+        <a class="avatar-chip" href="{% url 'accounts:logout' %}" aria-label="Logout">
+          {{ request.user.first_name|slice:":1"|upper }}{{ request.user.last_name|slice:":1"|upper }}
+        </a>
+      </div>
+    </header>
 
-    <h2>My Orders</h2>
-    {% for order in orders %}
-    <div>
-        <p>
-            Order #{{ order.id }} |
-            <strong>{{ order.get_status_display }}</strong> |
-            GHS {{ order.total_amount }} |
-            {{ order.created_at|date:"d M Y" }}
-        </p>
-        <a href="{% url 'orders:order_detail' order.pk %}">View Details</a>
-    </div>
-    <hr>
-    {% empty %}
-    <p>You have no orders yet. <a href="{% url 'products:product_list' %}">Start shopping</a></p>
-    {% endfor %}
-</body>
+    <main class="orders-main">
+      <section class="panel orders-panel">
+        <div class="panel-head">
+          <div>
+            <p class="panel-kicker">My orders</p>
+            <h3>Track your recent purchases</h3>
+          </div>
+          <span class="status-chip status-chip--neutral" id="orders-count">
+            {{ orders|length }} order{{ orders|length|pluralize }}
+          </span>
+        </div>
+
+        <div class="summary-grid" id="orders-summary"></div>
+
+        <div class="table-wrap">
+          <table class="buyer-table orders-table">
+            <thead>
+              <tr>
+                <th scope="col">Order</th>
+                <th scope="col">Items</th>
+                <th scope="col">Status</th>
+                <th scope="col">Total</th>
+                <th scope="col">Date</th>
+              </tr>
+            </thead>
+            <tbody id="orders-body">
+              {% for order in orders %}
+              <tr data-status="{{ order.status }}">
+                <td><a href="{% url 'orders:order_detail' order.pk %}">#{{ order.id }}</a></td>
+                <td>
+                  {% for item in order.items.all %}
+                    {{ item.product.name }}{% if not forloop.last %}, {% endif %}
+                  {% endfor %}
+                </td>
+                <td>
+                  <span class="status-pill status-pill--{{ order.status }}">
+                    {{ order.get_status_display }}
+                  </span>
+                </td>
+                <td>GHS {{ order.total_amount }}</td>
+                <td>{{ order.created_at|date:"d M Y" }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="5">
+                  <div class="empty-state">
+                    <strong>No orders yet</strong>
+                    <span>Your completed purchases will appear here.</span>
+                    <a class="button button-primary" href="{% url 'accounts:buyer_dashboard' %}">Start shopping</a>
+                  </div>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <script src="{% static 'media.js' %}"></script>
+    <script src="{% static 'buyers_dashboard/my Orders/my_orders.js' %}"></script>
+  </body>
 </html>

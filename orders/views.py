@@ -31,7 +31,7 @@ def cart_add(request, product_id):
             cart_item.save()
         else:
             messages.error(request, 'Not enough stock available.')
-    
+
     return redirect('orders:cart_detail')
 
 
@@ -71,6 +71,24 @@ def checkout(request):
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
         if form.is_valid():
+            # Validate stock before creating anything
+            out_of_stock = []
+            for cart_item in cart.items.all():
+                if cart_item.product.stock < cart_item.quantity:
+                    out_of_stock.append(cart_item.product.name)
+
+            if out_of_stock:
+                product_names = ', '.join(out_of_stock)
+                messages.error(
+                    request,
+                    f'Not enough stock for: {product_names}. '
+                    f'Please update your cart and try again.'
+                )
+                return render(request, 'orders/checkout.html', {
+                    'form': form,
+                    'cart': cart
+                })
+
             # Create the order
             order = Order.objects.create(
                 buyer=request.user,
@@ -90,10 +108,11 @@ def checkout(request):
                 cart_item.product.stock -= cart_item.quantity
                 cart_item.product.save()
 
-            # Calculate and save total
+           # Calculate and save total
+            order.refresh_from_db()
             order.calculate_total()
 
-            # Clear the cart
+           # Clear the cart
             cart.items.all().delete()
 
             return redirect('orders:order_detail', pk=order.pk)
@@ -143,18 +162,15 @@ def order_cancel(request, pk):
 
 @seller_required
 def seller_order_list(request):
-    # Get all orders that contain this seller's products
     orders = Order.objects.filter(
         items__product__seller=request.user
     ).distinct().order_by('-created_at')
-
     return render(request, 'orders/seller_order_list.html', {'orders': orders})
 
 
 @seller_required
 def seller_order_detail(request, pk):
     order = get_object_or_404(Order, pk=pk)
-    # Only show items belonging to this seller
     seller_items = order.items.filter(product__seller=request.user)
 
     if request.method == 'POST':
