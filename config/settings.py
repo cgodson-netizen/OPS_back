@@ -37,6 +37,8 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
+    'cloudinary_storage',
+    'cloudinary',
     'django.contrib.staticfiles',
 
 
@@ -172,3 +174,12 @@ else:
     EMAIL_HOST_USER = config('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
     DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+
+#cloudinary
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dtvjhpt8s',
+    'API_KEY': '117682186664425',
+    'API_SECRET': 'EbznnIOWBQVoCvN-W98Ic8PBvDM',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
