@@ -1,34 +1,146 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>Order #{{ order.id }}</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
-        <a href="{% url 'products:product_create' %}">Add Product</a> |
-        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Order #{{ order.id }}</title>
+    <link rel="stylesheet" href="{% static 'sellers_dashboard/sellersDashboard.css' %}" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <aside class="sidebar" id="seller-sidebar">
+        <div class="brand-block">
+          <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="brand-mark" />
+          <div class="brand-copy-block">
+            <h1 class="brand-title">Dashboard</h1>
+          </div>
+        </div>
+        <nav class="sidebar-nav" aria-label="Seller navigation">
+          <a class="nav-link" href="{% url 'accounts:seller_dashboard' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M9.5 20v-5h5v5" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Overview</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:seller_product_list' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>My Products</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:product_create' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Add Product</span>
+          </a>
+          <a class="nav-link is-active" href="{% url 'orders:seller_order_list' %}" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 6.5h16M7 3.5v3M17 3.5v3M6.5 20h11A2.5 2.5 0 0 0 20 17.5v-8A2.5 2.5 0 0 0 17.5 7h-11A2.5 2.5 0 0 0 4 9.5v8A2.5 2.5 0 0 0 6.5 20Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Incoming Orders</span>
+          </a>
+          <a class="nav-link" href="{% url 'analytics:seller_analytics' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-6m4 6v-10m4 10v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Analytics</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <a class="logout-link" href="{% url 'accounts:logout' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M10 7V5.5A2.5 2.5 0 0 1 12.5 3h5A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-5A2.5 2.5 0 0 1 10 18.5V17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M3 12h11M7 8l-4 4 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
 
-    <h2>Order #{{ order.id }}</h2>
-    <p>Buyer: {{ order.buyer.get_full_name }}</p>
-    <p>Delivery Address: {{ order.delivery_address }}</p>
-    <p>Status: <strong>{{ order.get_status_display }}</strong></p>
-    <p>Placed: {{ order.created_at|date:"d M Y, h:i A" }}</p>
-    <hr>
-    <h3>Your Items in this Order</h3>
-    {% for item in seller_items %}
-    <p>{{ item.product.name }} x {{ item.quantity }} = GHS {{ item.get_subtotal }}</p>
-    {% endfor %}
-    <hr>
-    <h3>Update Order Status</h3>
-    <form method="post">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Update Status</button>
-    </form>
-    <br>
-    <a href="{% url 'orders:seller_order_list' %}">← Back to Orders</a>
-</body>
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+      <main class="dashboard-main">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <h2>Order #{{ order.id }}</h2>
+            <p class="topbar-text">
+              <span>{{ request.user.get_full_name }}</span>
+              <span> — review buyer details and update the order status.</span>
+            </p>
+            <div class="topbar-actions">
+              <a class="button button-secondary" href="{% url 'orders:seller_order_list' %}">← Back to Orders</a>
+            </div>
+          </div>
+        </header>
+
+        <section class="content-grid" style="grid-template-columns: 1fr;">
+          <article class="panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Order details</p>
+                <h3>Order #{{ order.id }}</h3>
+              </div>
+              <span class="status-pill status-pill--{{ order.status }}">{{ order.get_status_display }}</span>
+            </div>
+
+            <!-- Order Meta -->
+            <div class="order-detail-grid" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:16px; margin:24px 0;">
+              <article class="meta-card">
+                <span>Buyer</span>
+                <strong>{{ order.buyer.get_full_name }}</strong>
+                <p>{{ order.buyer.email }}</p>
+              </article>
+              <article class="meta-card">
+                <span>Delivery Address</span>
+                <strong>{{ order.delivery_address }}</strong>
+              </article>
+              <article class="meta-card">
+                <span>Total Amount</span>
+                <strong>GHS {{ order.total_amount }}</strong>
+              </article>
+              <article class="meta-card">
+                <span>Order Placed</span>
+                <strong>{{ order.created_at|date:"d M Y, h:i A" }}</strong>
+              </article>
+            </div>
+
+            <!-- Items -->
+            <div style="margin-bottom:24px;">
+              <p class="panel-kicker">Your items in this order</p>
+              <div class="orders-list">
+                {% for item in seller_items %}
+                <div class="order-line-item" style="display:flex; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f0f0f0;">
+                  <div>
+                    <strong>{{ item.product.name }}</strong>
+                    <span style="color:#888; margin-left:8px;">× {{ item.quantity }}</span>
+                  </div>
+                  <strong>GHS {{ item.get_subtotal }}</strong>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <!-- Status Update Form -->
+            <div class="panel" style="background:#f9fafb; border-radius:12px; padding:24px;">
+              <p class="panel-kicker">Update status</p>
+              <h4 style="margin:0 0 16px;">Change Order Status</h4>
+              <form method="post">
+                {% csrf_token %}
+                <div style="display:flex; gap:12px; align-items:flex-end; flex-wrap:wrap;">
+                  <div style="flex:1; min-width:200px;">
+                    <label style="font-size:13px; color:#666; display:block; margin-bottom:6px;">Status</label>
+                    {{ form.status }}
+                  </div>
+                  <button class="button button-primary" type="submit">Update Status</button>
+                </div>
+              </form>
+            </div>
+
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="{% static 'media.js' %}"></script>
+  </body>
 </html>

@@ -1,23 +1,91 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>{{ action }} Product</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
-        <a href="{% url 'products:product_create' %}">Add Product</a> |
-        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
-
-    <h2>{{ action }} Product</h2>
-    <form method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">{{ action }}</button>
-    </form>
-    <br>
-    <a href="{% url 'products:seller_product_list' %}">← Cancel</a>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | {{ action }} Product</title>
+    <link rel="stylesheet" href="{% static 'sellers_dashboard/sellersDashboard.css' %}" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <aside class="sidebar" id="seller-sidebar">
+        <div class="brand-block">
+          <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="brand-mark" />
+          <div class="brand-copy-block"><h1 class="brand-title">Dashboard</h1></div>
+        </div>
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="{% url 'accounts:seller_dashboard' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M9.5 20v-5h5v5" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <span>Overview</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:seller_product_list' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></span>
+            <span>My Products</span>
+          </a>
+          <a class="nav-link is-active" href="{% url 'products:product_create' %}" aria-current="page">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></span>
+            <span>Add Product</span>
+          </a>
+          <a class="nav-link" href="{% url 'orders:seller_order_list' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 6.5h16M7 3.5v3M17 3.5v3M6.5 20h11A2.5 2.5 0 0 0 20 17.5v-8A2.5 2.5 0 0 0 17.5 7h-11A2.5 2.5 0 0 0 4 9.5v8A2.5 2.5 0 0 0 6.5 20Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <span>Incoming Orders</span>
+          </a>
+          <a class="nav-link" href="{% url 'analytics:seller_analytics' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-6m4 6v-10m4 10v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></span>
+            <span>Analytics</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <a class="logout-link" href="{% url 'accounts:logout' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 7V5.5A2.5 2.5 0 0 1 12.5 3h5A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-5A2.5 2.5 0 0 1 10 18.5V17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M3 12h11M7 8l-4 4 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
+      <main class="dashboard-main">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <h2>{{ action }} Product</h2>
+            <p class="topbar-text"><span>{{ request.user.get_full_name }}</span><span> — fill in the details to {{ action|lower }} your listing.</span></p>
+            <div class="topbar-actions">
+              <a class="button button-secondary" href="{% url 'products:seller_product_list' %}">← Cancel</a>
+            </div>
+          </div>
+        </header>
+        <section class="content-grid" style="grid-template-columns:1fr;">
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="panel-kicker">Product details</p><h3>{{ action }} listing</h3></div>
+            </div>
+            <form method="post" enctype="multipart/form-data" style="padding:8px 0;">
+              {% csrf_token %}
+              {% if form.non_field_errors %}
+              <div style="background:#fee2e2;color:#dc2626;padding:12px 16px;border-radius:8px;margin-bottom:16px;">
+                {% for error in form.non_field_errors %}{{ error }}{% endfor %}
+              </div>
+              {% endif %}
+              <div class="field-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+                {% for field in form %}
+                <div class="field {% if field.field.widget.attrs.rows %}field--full{% endif %}">
+                  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                  {{ field }}
+                  {% if field.errors %}
+                  <span style="color:#dc2626;font-size:13px;">{{ field.errors.0 }}</span>
+                  {% endif %}
+                </div>
+                {% endfor %}
+              </div>
+              <div class="form-actions" style="margin-top:24px;display:flex;gap:12px;">
+                <a class="button button-outline" href="{% url 'products:seller_product_list' %}">Cancel</a>
+                <button class="button button-primary" type="submit">{{ action }} Product</button>
+              </div>
+            </form>
+          </article>
+        </section>
+      </main>
+    </div>
+    <script src="{% static 'media.js' %}"></script>
+  </body>
 </html>

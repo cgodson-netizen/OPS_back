@@ -1,30 +1,123 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>Incoming Orders</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
-        <a href="{% url 'products:product_create' %}">Add Product</a> |
-        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Incoming Orders</title>
+    <link rel="stylesheet" href="{% static 'sellers_dashboard/sellersDashboard.css' %}" />
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <aside class="sidebar" id="seller-sidebar">
+        <div class="brand-block">
+          <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="brand-mark" />
+          <div class="brand-copy-block">
+            <h1 class="brand-title">Dashboard</h1>
+          </div>
+        </div>
+        <nav class="sidebar-nav" aria-label="Seller navigation">
+          <a class="nav-link" href="{% url 'accounts:seller_dashboard' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M9.5 20v-5h5v5" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Overview</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:seller_product_list' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>My Products</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:product_create' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Add Product</span>
+          </a>
+          <a class="nav-link is-active" href="{% url 'orders:seller_order_list' %}" aria-current="page">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 6.5h16M7 3.5v3M17 3.5v3M6.5 20h11A2.5 2.5 0 0 0 20 17.5v-8A2.5 2.5 0 0 0 17.5 7h-11A2.5 2.5 0 0 0 4 9.5v8A2.5 2.5 0 0 0 6.5 20Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Incoming Orders</span>
+          </a>
+          <a class="nav-link" href="{% url 'analytics:seller_analytics' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-6m4 6v-10m4 10v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Analytics</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <a class="logout-link" href="{% url 'accounts:logout' %}">
+            <span class="nav-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24"><path d="M10 7V5.5A2.5 2.5 0 0 1 12.5 3h5A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-5A2.5 2.5 0 0 1 10 18.5V17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M3 12h11M7 8l-4 4 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg>
+            </span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
 
-    <h2>Incoming Orders</h2>
-    {% for order in orders %}
-    <div>
-        <p>
-            Order #{{ order.id }} |
-            <strong>{{ order.get_status_display }}</strong> |
-            GHS {{ order.total_amount }} |
-            {{ order.created_at|date:"d M Y" }}
-        </p>
-        <a href="{% url 'orders:seller_order_detail' order.pk %}">View & Update</a>
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
+
+      <main class="dashboard-main">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <h2>Incoming Orders</h2>
+            <p class="topbar-text">
+              <span>{{ request.user.get_full_name }}</span>
+              <span> — review and update order statuses.</span>
+            </p>
+            <div class="topbar-actions">
+              <a class="button button-primary" href="{% url 'products:product_create' %}">Add Product</a>
+              <a class="button button-secondary" href="{% url 'accounts:seller_dashboard' %}">Back to Overview</a>
+            </div>
+          </div>
+        </header>
+
+        <section class="content-grid" style="grid-template-columns: 1fr;">
+          <article class="panel orders-panel">
+            <div class="panel-head">
+              <div>
+                <p class="panel-kicker">Incoming orders</p>
+                <h3>All Orders</h3>
+              </div>
+              <span class="status-chip status-chip--neutral">{{ orders|length }} order{{ orders|length|pluralize }}</span>
+            </div>
+
+            <div class="orders-list">
+              {% for order in orders %}
+              <article class="order-card">
+                <div class="order-card-head">
+                  <div>
+                    <p class="order-card-id">Order #{{ order.id }}</p>
+                    <h4 class="order-card-buyer">{{ order.buyer.get_full_name }}</h4>
+                    <p class="order-card-summary">
+                      {% for item in order.items.all %}{{ item.product.name }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </p>
+                  </div>
+                  <span class="status-pill status-pill--{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+                <div class="order-card-meta">
+                  <div><span>Amount</span><strong>GHS {{ order.total_amount }}</strong></div>
+                  <div><span>Date</span><strong>{{ order.created_at|date:"d M Y" }}</strong></div>
+                  <div><span>Address</span><strong>{{ order.delivery_address|truncatechars:30 }}</strong></div>
+                </div>
+                <a class="button button-outline order-card-action" href="{% url 'orders:seller_order_detail' order.pk %}">
+                  View &amp; Update
+                </a>
+              </article>
+              {% empty %}
+              <div class="order-empty-state">
+                <strong>No incoming orders yet.</strong>
+                <p>Once buyers place orders, they will appear here.</p>
+              </div>
+              {% endfor %}
+            </div>
+          </article>
+        </section>
+      </main>
     </div>
-    <hr>
-    {% empty %}
-    <p>No orders yet.</p>
-    {% endfor %}
-</body>
+    <script src="{% static 'media.js' %}"></script>
+  </body>
 </html>

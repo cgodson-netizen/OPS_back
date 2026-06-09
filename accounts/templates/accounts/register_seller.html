@@ -42,12 +42,6 @@
 
           <!-- Step 1: Account Details -->
           <div class="form-step active" data-step="1">
-            <button class="google-login" id="google-login-btn" type="button">
-              <img src="{% static 'accounts/seller_onboarding/Images/google-icon.png' %}" alt="Google Logo" class="google-logo" />
-              Sign up with Google
-            </button>
-            <div class="divider">or</div>
-
             <div class="form-section">
               <h3 class="section-title">Account Details</h3>
               <div>
@@ -96,7 +90,6 @@
                 {% for error in form.password2.errors %}<p style="color:red;">{{ error }}</p>{% endfor %}
               </div>
             </div>
-
             <div class="step-actions single">
               <button type="button" class="signup-btn" data-next>Next</button>
             </div>
@@ -152,7 +145,6 @@
                 </label>
               </div>
             </div>
-
             <div class="step-actions">
               <button type="button" class="btn-secondary" data-prev>Back</button>
               <button type="submit" class="signup-btn">Finish</button>
@@ -161,8 +153,7 @@
         </form>
 
         <p class="login-link">
-          Already have an account?
-          <a href="{% url 'accounts:login' %}">Log in</a>
+          Already have an account? <a href="{% url 'accounts:login' %}">Log in</a>
         </p>
       </div>
     </div>
@@ -173,7 +164,6 @@
       const firstNameInput = document.getElementById("id_first_name");
       const lastNameInput = document.getElementById("id_last_name");
       const fullNameMirror = document.getElementById("full-name");
-
       function syncFullNameFields(fromCombined) {
         if (!firstNameInput || !lastNameInput || !fullNameMirror) return;
         if (fromCombined) {

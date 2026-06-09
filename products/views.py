@@ -27,7 +27,7 @@ def product_create(request):
             base_slug = slugify(product.name)
             product.slug = f"{base_slug}-{uuid.uuid4().hex[:6]}"
             product.save()
-            return redirect('products:seller_product_list')
+            return redirect('accounts:seller_dashboard')
     else:
         form = ProductForm()
     return render(request, 'products/product_form.html', {'form': form, 'action': 'Create'})
@@ -40,7 +40,7 @@ def product_edit(request, pk):
         form = ProductForm(request.POST, request.FILES, instance=product)
         if form.is_valid():
             form.save()
-            return redirect('products:seller_product_list')
+            return redirect('accounts:seller_dashboard')
     else:
         form = ProductForm(instance=product)
     return render(request, 'products/product_form.html', {'form': form, 'action': 'Edit'})
@@ -85,3 +85,5 @@ def product_list(request):
 def product_detail(request, slug):
     product = get_object_or_404(Product, slug=slug, is_active=True)
     return render(request, 'products/product_detail.html', {'product': product})
+
+

@@ -1,13 +1,51 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>Delete Product</title></head>
-<body>
-    <h2>Delete "{{ product.name }}"?</h2>
-    <p>This action cannot be undone.</p>
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Yes, Delete</button>
-    </form>
-    <a href="{% url 'products:seller_product_list' %}">Cancel</a>
-</body>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Delete Product</title>
+    <link rel="stylesheet" href="{% static 'sellers_dashboard/sellersDashboard.css' %}" />
+    <style>
+      .confirm-shell { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 24px; }
+      .confirm-card { background: white; border-radius: 24px; padding: 48px 40px; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 8px 40px rgba(0,0,0,0.08); }
+      .confirm-icon { width: 72px; height: 72px; background: #fee2e2; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 24px; }
+      .confirm-icon svg { width: 36px; height: 36px; color: #dc2626; }
+      .confirm-title { font-size: 24px; font-weight: 700; color: #111; margin: 0 0 8px; }
+      .confirm-text { font-size: 15px; color: #666; margin: 0 0 32px; }
+      .confirm-product { background: #f9fafb; border-radius: 12px; padding: 16px; margin-bottom: 32px; font-weight: 600; color: #111; }
+      .confirm-actions { display: flex; gap: 12px; justify-content: center; }
+      .btn-danger { background: #dc2626; color: white; border: none; padding: 14px 28px; border-radius: 50px; font-size: 15px; font-weight: 600; cursor: pointer; }
+      .btn-cancel { background: transparent; color: #2e7d32; border: 2px solid #2e7d32; padding: 12px 28px; border-radius: 50px; font-size: 15px; font-weight: 600; text-decoration: none; }
+      .btn-danger:hover { background: #b91c1c; }
+      .btn-cancel:hover { background: #f0fdf4; }
+      .confirm-brand { position: fixed; top: 24px; left: 24px; }
+      .confirm-brand img { height: 36px; }
+    </style>
+  </head>
+  <body>
+    <a class="confirm-brand" href="{% url 'accounts:seller_dashboard' %}">
+      <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" />
+    </a>
+    <div class="confirm-shell">
+      <div class="confirm-card">
+        <div class="confirm-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+          </svg>
+        </div>
+        <h1 class="confirm-title">Delete Product?</h1>
+        <p class="confirm-text">This action cannot be undone. The product will be permanently removed from your store.</p>
+        <div class="confirm-product">{{ product.name }}</div>
+        <div class="confirm-actions">
+          <a class="btn-cancel" href="{% url 'products:seller_product_list' %}">Cancel</a>
+          <form method="post" style="display:inline;">
+            {% csrf_token %}
+            <button class="btn-danger" type="submit">Yes, Delete</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <script src="{% static 'media.js' %}"></script>
+  </body>
 </html>

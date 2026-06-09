@@ -76,13 +76,15 @@ def role_redirect(request):
 def seller_dashboard(request):
     if request.user.role != 'seller':
         return redirect('accounts:role_redirect')
-    from products.models import Product
+    from products.models import Product, Category
     from orders.models import Order, OrderItem
     from django.db.models import Sum, F
 
     products = Product.objects.filter(seller=request.user).order_by('-created_at')
+    categories = Category.objects.all()
     total_products = products.count()
     active_products = products.filter(is_active=True).count()
+    low_stock_count = products.filter(is_active=True, stock__lte=5, stock__gt=0).count()
     total_orders = Order.objects.filter(
         items__product__seller=request.user
     ).distinct().count()
@@ -96,13 +98,14 @@ def seller_dashboard(request):
 
     return render(request, 'accounts/seller_dashboard.html', {
         'products': products,
+        'categories': categories,
         'total_products': total_products,
         'active_products': active_products,
+        'low_stock_count': low_stock_count,
         'total_orders': total_orders,
         'total_revenue': total_revenue,
         'recent_orders': recent_orders,
     })
-
 
 @login_required
 def buyer_dashboard(request):

@@ -1,164 +1,238 @@
+{% load static %}
 <!DOCTYPE html>
-<html>
-<head><title>My Analytics</title></head>
-<body>
-    <nav>
-        <strong>OPS</strong> |
-        <a href="{% url 'products:seller_product_list' %}">My Products</a> |
-        <a href="{% url 'products:product_create' %}">Add Product</a> |
-        <a href="{% url 'orders:seller_order_list' %}">Incoming Orders</a> |
-        <a href="{% url 'analytics:seller_analytics' %}">Analytics</a> |
-        <a href="{% url 'accounts:logout' %}">Logout</a>
-    </nav>
-    <hr>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OPS | Analytics</title>
+    <link rel="stylesheet" href="{% static 'sellers_dashboard/sellersDashboard.css' %}" />
+    <style>
+      .analytics-metric-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 16px;
+        margin-bottom: 24px;
+      }
+      .analytics-content-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+      .analytics-content-grid .panel-full {
+        grid-column: 1 / -1;
+      }
+      @media (max-width: 1024px) {
+        .analytics-metric-grid { grid-template-columns: 1fr 1fr; }
+        .analytics-content-grid { grid-template-columns: 1fr; }
+      }
+      @media (max-width: 640px) {
+        .analytics-metric-grid { grid-template-columns: 1fr; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="dashboard-shell">
+      <aside class="sidebar" id="seller-sidebar">
+        <div class="brand-block">
+          <img src="{% static 'Images/OPS Logo FW.png' %}" alt="OPS" class="brand-mark" />
+          <div class="brand-copy-block"><h1 class="brand-title">Dashboard</h1></div>
+        </div>
+        <nav class="sidebar-nav">
+          <a class="nav-link" href="{% url 'accounts:seller_dashboard' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 10.5 12 4l8 6.5V20H4z" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M9.5 20v-5h5v5" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <span>Overview</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:seller_product_list' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="14" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M8 9h8M8 13h8M8 17h5" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></span>
+            <span>My Products</span>
+          </a>
+          <a class="nav-link" href="{% url 'products:product_create' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></span>
+            <span>Add Product</span>
+          </a>
+          <a class="nav-link" href="{% url 'orders:seller_order_list' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 6.5h16M7 3.5v3M17 3.5v3M6.5 20h11A2.5 2.5 0 0 0 20 17.5v-8A2.5 2.5 0 0 0 17.5 7h-11A2.5 2.5 0 0 0 4 9.5v8A2.5 2.5 0 0 0 6.5 20Z" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <span>Incoming Orders</span>
+          </a>
+          <a class="nav-link is-active" href="{% url 'analytics:seller_analytics' %}" aria-current="page">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M4 20h16M7 20v-6m4 6v-10m4 10v-4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-width="1.8"/></svg></span>
+            <span>Analytics</span>
+          </a>
+        </nav>
+        <div class="sidebar-footer">
+          <a class="logout-link" href="{% url 'accounts:logout' %}">
+            <span class="nav-icon"><svg viewBox="0 0 24 24"><path d="M10 7V5.5A2.5 2.5 0 0 1 12.5 3h5A2.5 2.5 0 0 1 20 5.5v13A2.5 2.5 0 0 1 17.5 21h-5A2.5 2.5 0 0 1 10 18.5V17" fill="none" stroke="currentColor" stroke-linejoin="round" stroke-width="1.8"/><path d="M3 12h11M7 8l-4 4 4 4" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8"/></svg></span>
+            <span>Logout</span>
+          </a>
+        </div>
+      </aside>
+      <div class="sidebar-backdrop" aria-hidden="true"></div>
+      <main class="dashboard-main">
+        <header class="topbar">
+          <div class="topbar-copy">
+            <h2>Store Analytics</h2>
+            <p class="topbar-text">
+              <span>{{ request.user.get_full_name }}</span>
+              <span> — your store performance at a glance.</span>
+            </p>
+            <div class="topbar-actions">
+              <a class="button button-secondary" href="{% url 'accounts:seller_dashboard' %}">Back to Overview</a>
+            </div>
+          </div>
+        </header>
 
-    <h2>Store Analytics — {{ request.user.get_full_name }}</h2>
+        <!-- Summary Metrics -->
+        <section class="analytics-metric-grid" aria-label="Summary metrics">
+          <a href="{% url 'analytics:seller_analytics' %}" style="text-decoration:none;">
+          <article class="metric-card metric-card--green" style="cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <span class="metric-label">Total Revenue</span>
+            <strong class="metric-value">GHS {{ total_revenue }}</strong>
+            <span class="metric-note">Confirmed & delivered orders</span>
+          </article>
+          </a>
+          <a href="{% url 'orders:seller_order_list' %}" style="text-decoration:none;">
+          <article class="metric-card metric-card--amber" style="cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <span class="metric-label">Total Orders</span>
+            <strong class="metric-value">{{ total_orders }}</strong>
+            <span class="metric-note">Click to view all orders</span>
+          </article>
+          </a>
+          <a href="{% url 'products:seller_product_list' %}" style="text-decoration:none;">
+          <article class="metric-card metric-card--teal" style="cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <span class="metric-label">Active Products</span>
+            <strong class="metric-value">{{ active_products }}</strong>
+            <span class="metric-note">Click to manage listings</span>
+          </article>
+          </a>
+          <a href="#low-stock" style="text-decoration:none;">
+          <article class="metric-card metric-card--rose" style="cursor:pointer;transition:transform 0.15s,box-shadow 0.15s;" onmouseover="this.style.transform='translateY(-3px)';this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+            <span class="metric-label">Low Stock</span>
+            <strong class="metric-value">{{ low_stock|length }}</strong>
+            <span class="metric-note">Click to see affected products</span>
+          </article>
+          </a>
+        </section>
 
-    <!-- ── Summary Cards ── -->
-    <h3>Overview</h3>
-    <table border="1" cellpadding="8">
-        <tr>
-            <td><strong>Total Revenue</strong><br>GHS {{ total_revenue }}</td>
-            <td><strong>Total Orders</strong><br>{{ total_orders }}</td>
-            <td><strong>Total Products</strong><br>{{ total_products }}</td>
-            <td><strong>Active Products</strong><br>{{ active_products }}</td>
-        </tr>
-    </table>
+        <section class="analytics-content-grid">
 
-    <hr>
+          <!-- Best Sellers -->
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="panel-kicker">Products</p><h3>Best Selling Products</h3></div>
+            </div>
+            {% if best_sellers %}
+            <div class="orders-list">
+              {% for item in best_sellers %}
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0;">
+                <div>
+                  <p style="font-size:12px;color:#888;">#{{ forloop.counter }}</p>
+                  <strong>{{ item.product__name }}</strong>
+                </div>
+                <div style="text-align:right;">
+                  <strong style="color:#2e7d32;">{{ item.total_sold }} units</strong>
+                  <p style="color:#666;font-size:13px;">GHS {{ item.total_revenue }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="orders-panel-copy">No sales data yet.</p>
+            {% endif %}
+          </article>
 
-    <!-- ── Best Selling Products ── -->
-    <h3>Best Selling Products</h3>
-    {% if best_sellers %}
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>#</th>
-                <th>Product</th>
-                <th>Units Sold</th>
-                <th>Revenue (GHS)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in best_sellers %}
-            <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ item.product__name }}</td>
-                <td>{{ item.total_sold }}</td>
-                <td>{{ item.total_revenue }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No sales data yet.</p>
-    {% endif %}
+          <!-- Orders by Status -->
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="panel-kicker">Orders</p><h3>Orders by Status</h3></div>
+            </div>
+            {% if orders_by_status %}
+            <div class="orders-list">
+              {% for item in orders_by_status %}
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #f0f0f0;">
+                <span class="status-pill status-pill--{{ item.status }}">{{ item.status|capfirst }}</span>
+                <strong>{{ item.count }} order{{ item.count|pluralize }}</strong>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="orders-panel-copy">No orders yet.</p>
+            {% endif %}
+          </article>
 
-    <hr>
+          <!-- Daily Sales -->
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="panel-kicker">Sales</p><h3>Last 7 Days</h3></div>
+            </div>
+            {% if daily_sales %}
+            <div class="orders-list">
+              {% for day in daily_sales %}
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                <span style="font-size:14px;">{{ day.day|date:"d M Y" }}</span>
+                <div style="text-align:right;">
+                  <strong>GHS {{ day.revenue }}</strong>
+                  <p style="color:#888;font-size:13px;">{{ day.orders }} order{{ day.orders|pluralize }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="orders-panel-copy">No sales in the last 7 days.</p>
+            {% endif %}
+          </article>
 
-    <!-- ── Orders by Status ── -->
-    <h3>Orders by Status</h3>
-    {% if orders_by_status %}
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Status</th>
-                <th>Count</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for item in orders_by_status %}
-            <tr>
-                <td>{{ item.status|capfirst }}</td>
-                <td>{{ item.count }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No orders yet.</p>
-    {% endif %}
+          <!-- Monthly Sales -->
+          <article class="panel">
+            <div class="panel-head">
+              <div><p class="panel-kicker">Sales</p><h3>Last 6 Months</h3></div>
+            </div>
+            {% if monthly_sales %}
+            <div class="orders-list">
+              {% for month in monthly_sales %}
+              <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #f0f0f0;">
+                <span style="font-size:14px;">{{ month.month|date:"F Y" }}</span>
+                <div style="text-align:right;">
+                  <strong>GHS {{ month.revenue }}</strong>
+                  <p style="color:#888;font-size:13px;">{{ month.orders }} order{{ month.orders|pluralize }}</p>
+                </div>
+              </div>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="orders-panel-copy">No monthly data available.</p>
+            {% endif %}
+          </article>
 
-    <hr>
+          <!-- Low Stock -->
+          <article class="panel panel-full" id="low-stock">
+            <div class="panel-head">
+              <div><p class="panel-kicker">Inventory</p><h3>⚠ Low Stock Alert</h3></div>
+            </div>
+            {% if low_stock %}
+            <div class="product-management-list">
+              {% for product in low_stock %}
+              <article class="product-admin-item">
+                <div class="product-admin-copy">
+                  <div class="product-admin-top">
+                    <strong class="product-admin-name">{{ product.name }}</strong>
+                    <strong class="product-admin-price" style="color:#dc2626;">{{ product.stock }} left</strong>
+                  </div>
+                  <div class="product-admin-footer">
+                    <span class="status-pill status-pill--cancelled">Low Stock</span>
+                    <a class="action-link" href="{% url 'products:product_edit' product.pk %}">Restock</a>
+                  </div>
+                </div>
+              </article>
+              {% endfor %}
+            </div>
+            {% else %}
+            <p class="orders-panel-copy">All products are well stocked.</p>
+            {% endif %}
+          </article>
 
-    <!-- ── Sales Last 7 Days ── -->
-    <h3>Sales — Last 7 Days</h3>
-    {% if daily_sales %}
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Date</th>
-                <th>Orders</th>
-                <th>Revenue (GHS)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for day in daily_sales %}
-            <tr>
-                <td>{{ day.day|date:"d M Y" }}</td>
-                <td>{{ day.orders }}</td>
-                <td>{{ day.revenue }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No sales in the last 7 days.</p>
-    {% endif %}
-
-    <hr>
-
-    <!-- ── Monthly Sales ── -->
-    <h3>Sales — Last 6 Months</h3>
-    {% if monthly_sales %}
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Month</th>
-                <th>Orders</th>
-                <th>Revenue (GHS)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for month in monthly_sales %}
-            <tr>
-                <td>{{ month.month|date:"F Y" }}</td>
-                <td>{{ month.orders }}</td>
-                <td>{{ month.revenue }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>No sales data for the last 6 months.</p>
-    {% endif %}
-
-    <hr>
-
-    <!-- ── Low Stock Alert ── -->
-    <h3>⚠️ Low Stock Alert</h3>
-    {% if low_stock %}
-    <table border="1" cellpadding="8">
-        <thead>
-            <tr>
-                <th>Product</th>
-                <th>Stock Remaining</th>
-                <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for product in low_stock %}
-            <tr>
-                <td>{{ product.name }}</td>
-                <td>{{ product.stock }}</td>
-                <td><a href="{% url 'products:product_edit' product.pk %}">Restock</a></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <p>All products are well stocked.</p>
-    {% endif %}
-
-</body>
+        </section>
+      </main>
+    </div>
+    <script src="{% static 'media.js' %}"></script>
+  </body>
 </html>
