@@ -3,7 +3,7 @@ from accounts.models import CustomUser
 
 class Command(BaseCommand):
     def handle(self, *args, **options):
-        if not CustomUser.objects.filter(email='admin@ops.com').exists():
+        if not CustomUser.objects.filter(is_superuser=True).exists():
             CustomUser.objects.create_superuser(
                 email='godsonclement3456@gmail.com',
                 password='2vxiohq8',
@@ -12,4 +12,4 @@ class Command(BaseCommand):
             )
             self.stdout.write('Superuser created')
         else:
-            self.stdout.write('Superuser already exists')
+            self.stdout.write('Superuser already exists - skipping')
