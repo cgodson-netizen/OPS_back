@@ -76,10 +76,17 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Media — Cloudinary for all environments
-DEFAULT_FILE_STORAGE = 'config.cloudinary_storage_backend.CloudinaryMediaStorage'
+# Storage configuration — Django 4.2+ STORAGES dict
+STORAGES = {
+    "default": {
+        "BACKEND": "config.cloudinary_storage_backend.CloudinaryMediaStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}
+
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 

@@ -19,15 +19,22 @@ class CloudinaryMediaStorage(Storage):
             content,
             public_id=public_id,
             overwrite=True,
-            resource_type='image'
+            resource_type='auto'
         )
-        return response['public_id']
+        return response['secure_url']
 
     def url(self, name):
+        if name and name.startswith('http'):
+            return name
         return cloudinary.CloudinaryImage(name).build_url()
 
     def exists(self, name):
         return False
 
     def delete(self, name):
-        cloudinary.uploader.destroy(name)
+        try:
+            public_id = os.path.splitext(name)[0]
+            cloudinary.uploader.destroy(public_id)
+        except Exception:
+            pass
+        
