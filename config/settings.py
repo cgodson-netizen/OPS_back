@@ -25,8 +25,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'cloudinary_storage',
-    'cloudinary',
+    
     'accounts',
     'products',
     'orders',
@@ -103,7 +102,7 @@ CLOUDINARY_STORAGE = {
     'API_SECRET': 'EbznnIOWBQVoCvN-W98Ic8PBvDM',
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+DEFAULT_FILE_STORAGE = 'config.cloudinary_storage_backend.CloudinaryMediaStorage'
 
 # Media files fallback
 MEDIA_URL = '/media/'
