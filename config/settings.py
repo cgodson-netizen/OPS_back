@@ -1,16 +1,8 @@
-"""
-Django settings for config project.
-"""
-
 from pathlib import Path
 from decouple import config
 import os
 import dj_database_url
-import cloudinary
-import cloudinary.uploader
-import cloudinary.api
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
@@ -25,7 +17,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    
     'accounts',
     'products',
     'orders',
@@ -82,29 +73,13 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
-# Cloudinary — media storage for all environments
-cloudinary.config(
-    cloud_name='dtvjhpt8s',
-    api_key='117682186664425',
-    api_secret='EbznnIOWBQVoCvN-W98Ic8PBvDM',
-    secure=True
-)
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dtvjhpt8s',
-    'API_KEY': '117682186664425',
-    'API_SECRET': 'EbznnIOWBQVoCvN-W98Ic8PBvDM',
-}
-
+# Media — Cloudinary for all environments
 DEFAULT_FILE_STORAGE = 'config.cloudinary_storage_backend.CloudinaryMediaStorage'
-
-# Media files fallback
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
@@ -119,7 +94,6 @@ ADMIN_SITE_HEADER = 'OPS Marketplace Administration'
 ADMIN_SITE_TITLE = 'OPS Admin'
 ADMIN_INDEX_TITLE = 'Welcome to OPS Marketplace Admin'
 
-# Production security settings
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
@@ -130,7 +104,6 @@ if not DEBUG:
 
 CSRF_TRUSTED_ORIGINS = ['https://ops-marketplace.onrender.com']
 
-# Email configuration
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 else:
