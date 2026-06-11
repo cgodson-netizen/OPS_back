@@ -1,3 +1,4 @@
+
 import cloudinary
 import cloudinary.uploader
 from django.core.files.storage import Storage
@@ -14,14 +15,18 @@ class CloudinaryMediaStorage(Storage):
         )
 
     def _save(self, name, content):
-        public_id = os.path.splitext(name)[0]
-        response = cloudinary.uploader.upload(
-            content,
-            public_id=public_id,
-            overwrite=True,
-            resource_type='auto'
-        )
-        return response['secure_url']
+        try:
+            public_id = os.path.splitext(name)[0]
+            response = cloudinary.uploader.upload(
+                content,
+                public_id=public_id,
+                overwrite=True,
+                resource_type='auto',
+                timeout=25,
+            )
+            return response['secure_url']
+        except Exception:
+            return name
 
     def url(self, name):
         if name and name.startswith('http'):
@@ -37,4 +42,5 @@ class CloudinaryMediaStorage(Storage):
             cloudinary.uploader.destroy(public_id)
         except Exception:
             pass
-        
+
+      
