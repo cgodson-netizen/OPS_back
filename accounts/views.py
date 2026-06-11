@@ -5,9 +5,9 @@ from django.contrib.auth.decorators import login_required
 from .forms import BuyerRegistrationForm, SellerRegistrationForm, LoginForm
 from django.core.mail import send_mail
 from django.conf import settings
-from .models import PasswordResetOTP
 from django.http import JsonResponse
 from .models import CustomUser, PasswordResetOTP
+
 
 def register_buyer(request):
     if request.user.is_authenticated:
@@ -107,6 +107,7 @@ def seller_dashboard(request):
         'recent_orders': recent_orders,
     })
 
+
 @login_required
 def buyer_dashboard(request):
     if request.user.role != 'buyer':
@@ -127,6 +128,7 @@ def buyer_dashboard(request):
         'cart_count': cart_count,
     })
 
+
 def homepage(request):
     if request.user.is_authenticated:
         return redirect('accounts:role_redirect')
@@ -140,19 +142,21 @@ def password_reset_request(request):
             user = CustomUser.objects.get(email=email)
             otp = PasswordResetOTP.generate_otp()
             PasswordResetOTP.objects.create(user=user, otp=otp)
-            send_mail(
-                subject='OPS Marketplace — Password Reset OTP',
-                message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.',
-                from_email=settings.DEFAULT_FROM_EMAIL,
-                recipient_list=[email],
-                fail_silently=False,
-            )
+            try:
+                send_mail(
+                    subject='OPS Marketplace — Password Reset OTP',
+                    message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    recipient_list=[email],
+                    fail_silently=True,
+                )
+            except Exception:
+                pass
             request.session['reset_email'] = email
             return redirect('accounts:verify_otp')
         except CustomUser.DoesNotExist:
             request.session['reset_email'] = email
             return redirect('accounts:verify_otp')
-
     return render(request, 'accounts/password_reset.html')
 
 
@@ -236,13 +240,16 @@ def resend_otp(request):
                 user = CustomUser.objects.get(email=email)
                 otp = PasswordResetOTP.generate_otp()
                 PasswordResetOTP.objects.create(user=user, otp=otp)
-                send_mail(
-                    subject='OPS Marketplace — New OTP',
-                    message=f'Your new OTP is: {otp}\n\nThis code expires in 10 minutes.',
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    recipient_list=[email],
-                    fail_silently=False,
-                )
+                try:
+                    send_mail(
+                        subject='OPS Marketplace — Password Reset OTP',
+                        message=f'Your OTP for password reset is: {otp}\n\nThis code expires in 10 minutes.',
+                        from_email=settings.DEFAULT_FROM_EMAIL,
+                        recipient_list=[email],
+                        fail_silently=True,
+                    )
+                except Exception:
+                    pass
                 return JsonResponse({'status': 'sent'})
             except CustomUser.DoesNotExist:
                 return JsonResponse({'status': 'sent'})
